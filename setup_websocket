@@ -1,0 +1,10 @@
+sudo composer require predis/predis
+sudo apt install php7.4-bcmath
+sudo apt install redis-server
+php artisan make:event departmentRequirement
+
+npm install -g laravel-echo-server
+laravel-echo-server init
+npm install
+npm install laravel-echo
+npm install socket.io-client

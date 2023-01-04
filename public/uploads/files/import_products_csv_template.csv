@@ -1,0 +1,4 @@
+Product Name,Brand,Unit,Category,Sub category,SKU,Barcode Type,Manage Stock?,Alert quantity,Expires in,Expiry Period Unit,Applicable Tax,Selling Price Tax Type,Product Type,Variation Name,Variation Values,"Purchase Price (Including Tax)
+","Purchase Price (Excluding Tax)
+",Profit Margin %,Selling Price,Opening Stock,Location,Expiry Date,"Enable Product description, IMEI or Serial Number",Weight,Rack,Row,Position,Image,Product Description,Custom Field1,Custom Field2,Custom Field3,Custom Field4,Disposable Item
+akshar,,Kg,Electric,,akshar,,1,1,,,,inclusive,single,,,10,,,10,100,Sarangpur Store,,1,,R1,ROW1,POS1,,Test,,,,,0
