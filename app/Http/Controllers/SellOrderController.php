@@ -510,8 +510,21 @@ class SellOrderController extends Controller
                 $formated_sellorder_line = $this->productUtil->changeSellorderLineUnit($value);
                 $sellorder->sellorder_lines[$key] = $formated_sellorder_line;
             }
+            $rationingQuotas = DB::table('purchase_lines as pl')
+            ->where('product_id',$sellorder->sellorder_lines[$key]->product_id)->select(
+                DB::raw("COALESCE(SUM(pl.quantity),0) as quotas"),
+            )->get()->first();
+    
+
+            $sellOrderQuantity = DB::table('sell_order_lines as sol')
+            ->where('product_id',$sellorder->sellorder_lines[$key]->product_id)->select(
+                DB::raw("COALESCE(SUM(sol.quantity),0) as qty"),
+            )->get()->first();
+            
+            $sellorder->sellorder_lines[$key]->quotas = $rationingQuotas->quotas;
+            $sellorder->sellorder_lines[$key]->qty = $sellOrderQuantity->qty - $sellorder->sellorder_lines[$key]->quantity; 
         }
-        
+
         $taxes = TaxRate::where('business_id', $business_id)
                             ->get();
         $orderStatuses = $this->productUtil->orderStatuses();
@@ -550,7 +563,9 @@ class SellOrderController extends Controller
                 'default_purchase_status',
                 'customer_groups',
                 'types',
-                'shortcuts'
+                'shortcuts',
+                // 'quotas',
+                // 'available'
             ));
     }
 
@@ -909,6 +924,19 @@ class SellOrderController extends Controller
                 $taxes = TaxRate::where('business_id', $business_id)
                             ->get();
 
+                $rationingQuotas = DB::table('purchase_lines as pl')
+                ->where('product_id',$product_id)->select(
+                    DB::raw("COALESCE(SUM(pl.quantity),0) as quotas"),
+                )->get()->first();
+
+                $sellOrderQuantity = DB::table('sell_order_lines as sol')
+                ->where('product_id',$product_id)->select(
+                    DB::raw("COALESCE(SUM(sol.quantity),0) as sell"),
+                )->get()->first();
+                $quotas = $rationingQuotas->quotas;
+                //dd($rationingQuotas);
+                $sell = $sellOrderQuantity->sell;
+
                 return view('sellorder.partials.sellorder_entry_row')
                     ->with(compact(
                         'product',
@@ -920,7 +948,9 @@ class SellOrderController extends Controller
                         'hide_tax',
                         'sub_units',
                         'product_qty',
-                        'sellorder_date'
+                        'sellorder_date',
+                        'quotas',
+                        'sell'
                     ));
             }
         }

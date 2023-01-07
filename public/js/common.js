@@ -87,6 +87,23 @@ $(document).ready(function() {
     jQuery.validator.addMethod('more_then_zero', function(value, element) {
         return __number_uf(value)>0 ? true:false;
     });
+    jQuery.validator.addMethod('ss_product_check', function(value, element) {
+
+        let sell_qty = $(element).data('sell_qty');
+        let quota_qty = $(element).data('quota_qty');
+
+        let remain = Number(quota_qty) - Number(sell_qty);
+        
+        if(Number(sell_qty)+Number(__number_uf($(element).val())) > Number(quota_qty))
+        {
+            $(element).data('msg-ss_product_check','Quata-'+quota_qty+', Available-'+remain.toFixed(2))
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    });
     //Set global currency to be used in the application
     __currency_symbol = $('input#__symbol').val();
     __currency_thousand_separator = $('input#__thousand').val();

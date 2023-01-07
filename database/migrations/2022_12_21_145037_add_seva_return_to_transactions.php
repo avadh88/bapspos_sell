@@ -14,10 +14,10 @@ class AddSevaReturnToTransactions extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->boolean('return_seva')->default(0);
-            $table->integer('return_seva_by_customer_id')->nullable();
-            $table->string('return_seva_by_customer_name')->nullable();
-            $table->string('mobile')->nullable();
+            // $table->boolean('return_seva')->default(0);
+            // $table->integer('return_seva_by_customer_id')->nullable();
+            // $table->string('return_seva_by_customer_name')->nullable();
+            // $table->string('mobile')->nullable();
         });
     }
 

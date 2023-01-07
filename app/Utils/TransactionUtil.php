@@ -3584,4 +3584,44 @@ class TransactionUtil extends Util
 
         return $quantityReturn;
     }
+
+    /**
+     * rationalstore currency details
+     *
+     * @param int $business_id
+     *
+     * @return object
+     */
+    public function rationalstoreCurrencyDetails($business_id)
+    {
+        $business = Business::find($business_id);
+        $output = [
+            'rationalstore_in_diff_currency' => false,
+            'p_exchange_rate' => 1,
+            'decimal_seperator' => '.',
+            'thousand_seperator' => ',',
+            'symbol' => '',
+        ];
+
+        //Check if diff currency is used or not.
+        if ($business->purchase_in_diff_currency == 1) {
+            $output['purchase_in_diff_currency'] = true;
+            $output['p_exchange_rate'] = $business->p_exchange_rate;
+
+            $currency_id = $business->purchase_currency_id;
+        } else {
+            $output['purchase_in_diff_currency'] = false;
+            $output['p_exchange_rate'] = 1;
+            $currency_id = $business->currency_id;
+        }
+
+        $currency = Currency::find($currency_id);
+        $output['thousand_separator'] = $currency->thousand_separator;
+        $output['decimal_separator'] = $currency->decimal_separator;
+        $output['symbol'] = $currency->symbol;
+        $output['code'] = $currency->code;
+        $output['name'] = $currency->currency;
+
+        return (object)$output;
+    }
 }

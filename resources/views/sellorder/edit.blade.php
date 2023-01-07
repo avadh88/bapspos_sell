@@ -98,13 +98,51 @@
               </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="form-group">
+                  <div class="input-group">
+                  
                     {!! Form::label('document', __('sellorder.attach_document') . ':') !!}
                     {!! Form::file('document', ['id' => 'upload_document']); !!}
+                    @if($sellorder->document)
+                        <span class="input-group-btn input-space" style="padding-left:15px;padding-top:22px;">
+                            <button type="button" data-toggle="modal" data-target="#cash_receipt" id="cash_receipt_modal" class="btn btn-primary pull-right btn-flat">@lang('View')</button>
+                        </span>
+                    @endif
+                </div>
+
                     <p class="help-block">@lang('sellorder.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])</p>
                 </div>
             </div>
+            @if($sellorder->document)
+            <!-- Edit discount Modal -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="cash_receipt" class="cash_receipt">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <img src="{{ asset('/uploads/img/' . $sellorder->document) }}" style="width:100%"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <a download="{{$sellorder->document}}" href="{{ asset('/uploads/img/' . $sellorder->document) }}">
+                            <button type="button" class="btn btn-primary">@lang('messages.download')</button>
+                          </a>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">@lang('messages.close')</button>                            
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        @endif
         </div>
     @endcomponent
 

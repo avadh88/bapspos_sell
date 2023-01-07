@@ -119,6 +119,11 @@ return [
     'custom_req'=>'Custom requirements',
     'custom_req.view'=>'Custom requirements view',
     'custom_req.create'=>'Custom requirements create',
-    'display_order.view'=>'Display Order view'
+    'display_order.view'=>'Display Order view',
+
+    'rationalstore.view' => 'Ration Store View',
+    'rationalstore.create' => 'Ration Store Create',
+    'rationalstore.update' => 'Ration Store Update',
+    'rationalstore.delete' => 'Ration Store Delete',
     
 ];

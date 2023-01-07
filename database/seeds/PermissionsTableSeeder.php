@@ -85,6 +85,11 @@ class PermissionsTableSeeder extends Seeder
 
             ['name' => 'access_all_locations'],
             ['name' => 'dashboard.data'],
+            
+            ['name' => 'rationalstore.view'],
+            ['name' => 'rationalstore.create'],
+            ['name' => 'rationalstore.update'],
+            ['name' => 'rationalstore.delete'],
         ];
 
         $insert_data = [];

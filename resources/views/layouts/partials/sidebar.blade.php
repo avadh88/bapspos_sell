@@ -279,6 +279,32 @@
           </li>
         @endif
 
+        @if(auth()->user()->can('rationalstore.create') || auth()->user()->can('rationalstore.view') || auth()->user()->can('rationalstore.update') || auth()->user()->can('rationalstore.delete'))
+          <li class="treeview {{  in_array( $request->segment(1), ['rationalstore', 'pos', 'ecommerce', 'discount']) ? 'active active-sub' : '' }}" id="tour_step7">
+            <a href="#" id="tour_step7_menu"><i class="fa fa-arrow-circle-up"></i> <span>@lang('rationalstore.rationalstore')</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              @if(auth()->user()->can('rationalstore.view') || auth()->user()->can('rationalstore.update'))
+                <li class="{{ $request->segment(1) == 'rationalstore' && $request->segment(2) == null ? 'active' : '' }}" ><a href="{{action('RationalStoreController@index')}}"><i class="fa fa-list"></i>@lang('rationalstore.all_rationalstore')</a></li>
+              @endcan
+              <!-- Call superadmin module if defined -->
+              @if(Module::has('Ecommerce'))
+                @includeIf('ecommerce::layouts.partials.sell_sidebar')
+              @endif
+              @can('rationalstore.create')
+                <li class="{{ $request->segment(1) == 'rationalstore' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('RationalStoreController@create')}}"><i class="fa fa-plus-circle"></i>@lang('rationalstore.add_rationalstore')</a></li>
+              @endcan 
+              
+              @if(in_array('subscription', $enabled_modules))
+                <li class="{{ $request->segment(1) == 'subscriptions'? 'active' : '' }}" ><a href="{{action('SellPosController@listSubscriptions')}}"><i class="fa fa-recycle"></i>@lang('lang_v1.subscriptions')</a></li>
+              @endif
+            </ul>
+          </li>
+        @endif
+
         @if(auth()->user()->can('sellreturn.view') || auth()->user()->can('sellreturn.create'))
           <li class="treeview {{  in_array( $request->segment(1), ['sellorder', 'pos', 'sellreturngenralstore', 'ecommerce', 'discount']) ? 'active active-sub' : '' }}" id="tour_step7">
             <a href="#" id="tour_step7_menu"><i class="fa fa-arrow-circle-down"></i> <span>@lang('sellreturn.sellreturn')</span>

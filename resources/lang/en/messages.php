@@ -46,5 +46,6 @@ return [
     'deactivate' => 'Deactivate',
     'otp_not_match'=>'OTP Not match',
     'otp_sent_sucessfully'=>'OTP sent successfully',
-    'otp_not_sent_contcat_store'=>'OTP not sent contct general store'
+    'otp_not_sent_contcat_store'=>'OTP not sent contct general store',
+    'download'=>'Download'
 ];

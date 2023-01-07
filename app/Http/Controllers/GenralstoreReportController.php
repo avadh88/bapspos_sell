@@ -640,7 +640,77 @@ class GenralstoreReportController extends Controller
                     $pending = $row->total_sold - $row->total_returned;
                     return '<span class="pending" data-orig-value="'.$pending.'" >'.$pending.'</span>';
                 })
-                ->rawColumns(['quantity','purchase_price','subtotal','current_stock','pending','delivered','outstanding'])
+                ->addColumn('purchase_qty', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct) { 
+
+                    
+                    $products = DB::table('sell_order_lines as sol')
+                    ->join('transactions as trans', 'trans.id', '=', 'sol.transaction_id')
+                    ->select('trans.contact_id')->distinct();
+                    if (!empty($business_id)) 
+                    {
+                        $products->where('trans.business_id', $business_id);
+                    }
+                    if (!empty($request->input('location_id'))) 
+                    {
+                        $products->where('trans.location_id', $request->input('location_id'));
+                    }
+                    if (!empty($request->input('ir_customer_id'))) 
+                    {
+                        $products->where('trans.contact_id', $request->input('ir_customer_id'));
+                    }
+                    $products->where('sol.product_id',$row->product_id);
+                    if (!empty($date_range)) {
+                        $date_range = $date_range;
+                        $date_range_array = explode('~', $date_range);
+                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
+                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
+
+                        $products->whereDate('sol.sell_order_date', '>=', $start)
+                                ->whereDate('sol.sell_order_date', '<=', $end);
+                    }
+                    //$productsData = $products->groupBy('trans.contact_id')->get();
+                    $contactIds = $products->groupBy('trans.contact_id')->pluck('contact_id')->toArray();
+                    
+
+
+                    $products = DB::table('purchase_lines as pl')
+                    ->join('transactions as trans', 'trans.id', '=', 'pl.transaction_id');
+
+                    $products->select(DB::raw('(COALESCE(sum(pl.quantity),0)) as quantity'));
+                    if (!empty($business_id)) 
+                    {
+                        $products->where('trans.business_id', $business_id);
+                    }
+                    if (!empty($request->input('location_id'))) 
+                    {
+                        $products->where('trans.location_id', $request->input('location_id'));
+                    }
+                    // // if (!empty($request->input('ir_customer_id'))) 
+                    // // {
+                        // $products->whereIn('trans.contact_id', $contactIds);
+                        $products->where('trans.type','purchase')->where('trans.status','received');
+                    // // }
+                    if (!empty($request->input('date_range'))) {
+                        $date_range = $request->input('date_range');
+                        $date_range_array = explode('~', $date_range);
+                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
+                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
+
+                        $products->whereDate('trans.transaction_date', '>=', $start)
+                                ->whereDate('trans.transaction_date', '<=', $end);
+                    }
+                    
+                    $products->where('pl.product_id',$row->product_id);
+                    
+                    
+                    $products->groupBy('pl.product_id');
+
+                    
+                    $sellQty   = empty($products->pluck('quantity')->toArray()) ? 0 : $products->pluck('quantity')->first();
+                    return $sellQty;
+                    // return '<span class="current_stock" data-orig-value="0" >0</span>';
+                })
+                ->rawColumns(['quantity','purchase_price','subtotal','current_stock','pending','delivered','outstanding','purchase_qty'])
                 ->make(true);
         }
 

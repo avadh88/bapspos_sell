@@ -59,15 +59,29 @@
                 $sellorder_line->id); !!}
 
                 @php
-                    $check_decimal = 'false';
+                $check_decimal = 'false';
                     if($sellorder_line->product->unit->allow_decimal == 0){
                         $check_decimal = 'true';
                     }
                 @endphp
             
-                {!! Form::text('sellorder[' . $loop->index . '][quantity]', 
+                <input type="text" class="form-control input-sm mousetrap" value="{{@number_format($sellorder_line->quantity, $quantity_precision, $currency_details->decimal_separator, $currency_details->thousand_separator)}}" name="sellorder[{{$loop->index}}][quantity]" 
+                data-sellorder_quantity="{{$sellorder_line->quantity}}"
+                data-quota_qty="{{$sellorder_line->quotas}}" data-sell_qty="{{$sellorder_line->qty}}"
+                data-rule-required="true"
+                data-msg-required="@lang('validation.custom-messages.this_field_is_required')" 
+                data-rule-abs_digit="{{$check_decimal}}"
+                data-msg-abs_digit="__('lang_v1.decimal_value_not_allowed')" 
+                data-rule-ss_product_check="true"
+                data-msg-ss_product_check="@lang('validation.custom-messages.quotas_sell', ['quotas'=> $sellorder_line->quotas, 'sell' => $sellorder_line->qty  ])"
+                data-rule-more_then_zero="true"
+                data-msg-more_then_zero="@lang('lang_v1.more_then_zero')"  
+		    >
+
+
+                <!-- {!! Form::text('sellorder[' . $loop->index . '][quantity]', 
                 number_format($sellorder_line->quantity, $quantity_precision, $currency_details->decimal_separator, $currency_details->thousand_separator),
-                ['class' => 'form-control input-sm sellorder_quantity input_number mousetrap', 'required', 'data-rule-abs_digit' => $check_decimal, 'data-msg-abs_digit' => __('lang_v1.decimal_value_not_allowed')]); !!} 
+                ['class' => 'form-control input-sm sellorder_quantity input_number mousetrap', 'required', 'data-rule-abs_digit' => $check_decimal, 'data-msg-abs_digit' => __('lang_v1.decimal_value_not_allowed')]); !!}  -->
 
                 <input type="hidden" class="base_unit_cost" value="{{$sellorder_line->variations->default_sellorder_price}}">
                 @if(count($sellorder_line->product->unit->sub_units) > 0)

@@ -30,7 +30,10 @@ class Transaction extends Model
     {
         return $this->hasMany(\App\TransactionSellLine::class);
     }
-
+    public function rationalstore_lines()
+    {
+        return $this->hasMany(\App\RationingStore::class);
+    }
     public function contact()
     {
         return $this->belongsTo(\App\Contact::class, 'contact_id');

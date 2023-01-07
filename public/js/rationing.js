@@ -11,7 +11,7 @@ $(document).ready(function () {
         ignoreReadonly: true,
     });
     
-    $('#sellorderdate').datepicker({
+    $('#rationalstoredate').datepicker({
         autoclose: true,
         format: datepicker_date_format
     });
@@ -140,7 +140,7 @@ $(document).ready(function () {
     if ($('#search_product').length > 0) {
         $('#search_product')
             .autocomplete({
-                source: '/sellorder/get_products',
+                source: '/rationalstore/get_products',
                 minLength: 1,
                 response: function (event, ui) {
                     if (ui.content.length == 1) {
@@ -173,7 +173,7 @@ $(document).ready(function () {
                 },
                 select: function (event, ui) {
                     //$(this).val(null);
-                    //get_sellorder_entry_row(ui.item.product_id, ui.item.variation_id);
+                    //get_rationalstore_entry_row(ui.item.product_id, ui.item.variation_id);
                     document.getElementById('search_product').value = ui.item.text;
                     document.getElementById('variation_id').value   = ui.item.variation_id;
                     document.getElementById('product_id').value     = ui.item.product_id;
@@ -188,7 +188,7 @@ $(document).ready(function () {
             };
     }
 
-    $(document).on('click', '.remove_sellorder_entry_row', function () {
+    $(document).on('click', '.remove_rationalstore_entry_row', function () {
         swal({
             title: LANG.sure,
             icon: 'warning',
@@ -207,18 +207,18 @@ $(document).ready(function () {
     });
 
     //On Change of quantity
-    $(document).on('change', '.sellorder_quantity', function () {
+    $(document).on('change', '.rationalstore_quantity', function () {
         var row = $(this).closest('tr');
         var quantity = __read_number($(this), true);
-        var sellorder_before_tax = __read_number(row.find('input.sellorder_unit_cost'), true);
-        var sellorder_after_tax = __read_number(
-            row.find('input.sellorder_unit_cost_after_tax'),
+        var rationalstore_before_tax = __read_number(row.find('input.rationalstore_unit_cost'), true);
+        var rationalstore_after_tax = __read_number(
+            row.find('input.rationalstore_unit_cost_after_tax'),
             true
         );
 
         //Calculate sub totals
-        var sub_total_before_tax = quantity * sellorder_before_tax;
-        var sub_total_after_tax = quantity * sellorder_before_tax;
+        var sub_total_before_tax = quantity * rationalstore_before_tax;
+        var sub_total_after_tax = quantity * rationalstore_before_tax;
 
         row.find('.row_subtotal_before_tax').text(
             __currency_trans_from_en(sub_total_before_tax, false, true)
@@ -238,33 +238,33 @@ $(document).ready(function () {
         update_grand_total();
     });
 
-    $(document).on('change', '.sellorder_unit_cost_without_discount', function () {
-        var sellorder_before_discount = __read_number($(this), true);
+    $(document).on('change', '.rationalstore_unit_cost_without_discount', function () {
+        var rationalstore_before_discount = __read_number($(this), true);
 
         var row = $(this).closest('tr');
         var discount_percent = __read_number(row.find('input.inline_discounts'), true);
-        var quantity = __read_number(row.find('input.sellorder_quantity'), true);
+        var quantity = __read_number(row.find('input.rationalstore_quantity'), true);
 
         //Calculations.
-        var sellorder_before_tax =
-            parseFloat(sellorder_before_discount) -
-            __calculate_amount('percentage', discount_percent, sellorder_before_discount);
+        var rationalstore_before_tax =
+            parseFloat(rationalstore_before_discount) -
+            __calculate_amount('percentage', discount_percent, rationalstore_before_discount);
 
-        __write_number(row.find('input.sellorder_unit_cost'), sellorder_before_tax, true);
+        __write_number(row.find('input.rationalstore_unit_cost'), rationalstore_before_tax, true);
 
-        var sub_total_before_tax = quantity * sellorder_before_tax;
+        var sub_total_before_tax = quantity * rationalstore_before_tax;
 
         //Tax
         var tax_rate = parseFloat(
             row
-                .find('select.sellorder_line_tax_id')
+                .find('select.rationalstore_line_tax_id')
                 .find(':selected')
                 .data('tax_amount')
         );
-        var tax = __calculate_amount('percentage', tax_rate, sellorder_before_tax);
+        var tax = __calculate_amount('percentage', tax_rate, rationalstore_before_tax);
 
-        var sellorder_after_tax = sellorder_before_tax + tax;
-        var sub_total_after_tax = quantity * sellorder_after_tax;
+        var rationalstore_after_tax = rationalstore_before_tax + tax;
+        var sub_total_after_tax = quantity * rationalstore_after_tax;
 
         row.find('.row_subtotal_before_tax').text(
             __currency_trans_from_en(sub_total_before_tax, false, true)
@@ -275,16 +275,16 @@ $(document).ready(function () {
             true
         );
 
-        __write_number(row.find('input.sellorder_unit_cost_after_tax'), sellorder_after_tax, true);
+        __write_number(row.find('input.rationalstore_unit_cost_after_tax'), rationalstore_after_tax, true);
         row.find('.row_subtotal_after_tax').text(
             __currency_trans_from_en(sub_total_after_tax, false, true)
         );
         __write_number(row.find('input.row_subtotal_after_tax_hidden'), sub_total_after_tax, true);
 
-        row.find('.sellorder_product_unit_tax_text').text(
+        row.find('.rationalstore_product_unit_tax_text').text(
             __currency_trans_from_en(tax, false, true)
         );
-        __write_number(row.find('input.sellorder_product_unit_tax'), tax, true);
+        __write_number(row.find('input.rationalstore_product_unit_tax'), tax, true);
 
         update_inline_profit_percentage(row);
         update_table_total();
@@ -296,32 +296,32 @@ $(document).ready(function () {
 
         var discount_percent = __read_number($(this), true);
 
-        var quantity = __read_number(row.find('input.sellorder_quantity'), true);
-        var sellorder_before_discount = __read_number(
-            row.find('input.sellorder_unit_cost_without_discount'),
+        var quantity = __read_number(row.find('input.rationalstore_quantity'), true);
+        var rationalstore_before_discount = __read_number(
+            row.find('input.rationalstore_unit_cost_without_discount'),
             true
         );
 
         //Calculations.
-        var sellorder_before_tax =
-            parseFloat(sellorder_before_discount) -
-            __calculate_amount('percentage', discount_percent, sellorder_before_discount);
+        var rationalstore_before_tax =
+            parseFloat(rationalstore_before_discount) -
+            __calculate_amount('percentage', discount_percent, rationalstore_before_discount);
 
-        __write_number(row.find('input.sellorder_unit_cost'), sellorder_before_tax, true);
+        __write_number(row.find('input.rationalstore_unit_cost'), rationalstore_before_tax, true);
 
-        var sub_total_before_tax = quantity * sellorder_before_tax;
+        var sub_total_before_tax = quantity * rationalstore_before_tax;
 
         //Tax
         var tax_rate = parseFloat(
             row
-                .find('select.sellorder_line_tax_id')
+                .find('select.rationalstore_line_tax_id')
                 .find(':selected')
                 .data('tax_amount')
         );
-        var tax = __calculate_amount('percentage', tax_rate, sellorder_before_tax);
+        var tax = __calculate_amount('percentage', tax_rate, rationalstore_before_tax);
 
-        var sellorder_after_tax = sellorder_before_tax + tax;
-        var sub_total_after_tax = quantity * sellorder_after_tax;
+        var rationalstore_after_tax = rationalstore_before_tax + tax;
+        var sub_total_after_tax = quantity * rationalstore_after_tax;
 
         row.find('.row_subtotal_before_tax').text(
             __currency_trans_from_en(sub_total_before_tax, false, true)
@@ -332,48 +332,48 @@ $(document).ready(function () {
             true
         );
 
-        __write_number(row.find('input.sellorder_unit_cost_after_tax'), sellorder_after_tax, true);
+        __write_number(row.find('input.rationalstore_unit_cost_after_tax'), rationalstore_after_tax, true);
         row.find('.row_subtotal_after_tax').text(
             __currency_trans_from_en(sub_total_after_tax, false, true)
         );
         __write_number(row.find('input.row_subtotal_after_tax_hidden'), sub_total_after_tax, true);
-        row.find('.sellorder_product_unit_tax_text').text(
+        row.find('.rationalstore_product_unit_tax_text').text(
             __currency_trans_from_en(tax, false, true)
         );
-        __write_number(row.find('input.sellorder_product_unit_tax'), tax, true);
+        __write_number(row.find('input.rationalstore_product_unit_tax'), tax, true);
 
         update_inline_profit_percentage(row);
         update_table_total();
         update_grand_total();
     });
 
-    $(document).on('change', '.sellorder_unit_cost', function () {
+    $(document).on('change', '.rationalstore_unit_cost', function () {
         var row = $(this).closest('tr');
-        var quantity = __read_number(row.find('input.sellorder_quantity'), true);
-        var sellorder_before_tax = __read_number($(this), true);
+        var quantity = __read_number(row.find('input.rationalstore_quantity'), true);
+        var rationalstore_before_tax = __read_number($(this), true);
 
-        var sub_total_before_tax = quantity * sellorder_before_tax;
+        var sub_total_before_tax = quantity * rationalstore_before_tax;
 
         //Update unit cost price before discount
         var discount_percent = __read_number(row.find('input.inline_discounts'), true);
-        var sellorder_before_discount = __get_principle(sellorder_before_tax, discount_percent, true);
+        var rationalstore_before_discount = __get_principle(rationalstore_before_tax, discount_percent, true);
         __write_number(
-            row.find('input.sellorder_unit_cost_without_discount'),
-            sellorder_before_discount,
+            row.find('input.rationalstore_unit_cost_without_discount'),
+            rationalstore_before_discount,
             true
         );
 
         //Tax
         var tax_rate = parseFloat(
             row
-                .find('select.sellorder_line_tax_id')
+                .find('select.rationalstore_line_tax_id')
                 .find(':selected')
                 .data('tax_amount')
         );
-        var tax = __calculate_amount('percentage', tax_rate, sellorder_before_tax);
+        var tax = __calculate_amount('percentage', tax_rate, rationalstore_before_tax);
 
-        var sellorder_after_tax = sellorder_before_tax + tax;
-        var sub_total_after_tax = quantity * sellorder_after_tax;
+        var rationalstore_after_tax = rationalstore_before_tax + tax;
+        var sub_total_after_tax = quantity * rationalstore_after_tax;
 
         row.find('.row_subtotal_before_tax').text(
             __currency_trans_from_en(sub_total_before_tax, false, true)
@@ -384,13 +384,13 @@ $(document).ready(function () {
             true
         );
 
-        row.find('.sellorder_product_unit_tax_text').text(
+        row.find('.rationalstore_product_unit_tax_text').text(
             __currency_trans_from_en(tax, false, true)
         );
-        __write_number(row.find('input.sellorder_product_unit_tax'), tax, true);
+        __write_number(row.find('input.rationalstore_product_unit_tax'), tax, true);
 
-        //row.find('.sellorder_product_unit_tax_text').text( tax );
-        __write_number(row.find('input.sellorder_unit_cost_after_tax'), sellorder_after_tax, true);
+        //row.find('.rationalstore_product_unit_tax_text').text( tax );
+        __write_number(row.find('input.rationalstore_unit_cost_after_tax'), rationalstore_after_tax, true);
         row.find('.row_subtotal_after_tax').text(
             __currency_trans_from_en(sub_total_after_tax, false, true)
         );
@@ -401,10 +401,10 @@ $(document).ready(function () {
         update_grand_total();
     });
 
-    $(document).on('change', 'select.sellorder_line_tax_id', function () {
+    $(document).on('change', 'select.rationalstore_line_tax_id', function () {
         var row = $(this).closest('tr');
-        var sellorder_before_tax = __read_number(row.find('.sellorder_unit_cost'), true);
-        var quantity = __read_number(row.find('input.sellorder_quantity'), true);
+        var rationalstore_before_tax = __read_number(row.find('.rationalstore_unit_cost'), true);
+        var quantity = __read_number(row.find('input.rationalstore_quantity'), true);
 
         //Tax
         var tax_rate = parseFloat(
@@ -412,18 +412,18 @@ $(document).ready(function () {
                 .find(':selected')
                 .data('tax_amount')
         );
-        var tax = __calculate_amount('percentage', tax_rate, sellorder_before_tax);
+        var tax = __calculate_amount('percentage', tax_rate, rationalstore_before_tax);
 
         //Purchase price
-        var sellorder_after_tax = sellorder_before_tax + tax;
-        var sub_total_after_tax = quantity * sellorder_after_tax;
+        var rationalstore_after_tax = rationalstore_before_tax + tax;
+        var sub_total_after_tax = quantity * rationalstore_after_tax;
 
-        row.find('.sellorder_product_unit_tax_text').text(
+        row.find('.rationalstore_product_unit_tax_text').text(
             __currency_trans_from_en(tax, false, true)
         );
-        __write_number(row.find('input.sellorder_product_unit_tax'), tax, true);
+        __write_number(row.find('input.rationalstore_product_unit_tax'), tax, true);
 
-        __write_number(row.find('input.sellorder_unit_cost_after_tax'), sellorder_after_tax, true);
+        __write_number(row.find('input.rationalstore_unit_cost_after_tax'), rationalstore_after_tax, true);
 
         row.find('.row_subtotal_after_tax').text(
             __currency_trans_from_en(sub_total_after_tax, false, true)
@@ -434,30 +434,30 @@ $(document).ready(function () {
         update_grand_total();
     });
 
-    $(document).on('change', '.sellorder_unit_cost_after_tax', function () {
+    $(document).on('change', '.rationalstore_unit_cost_after_tax', function () {
         var row = $(this).closest('tr');
-        var sellorder_after_tax = __read_number($(this), true);
-        var quantity = __read_number(row.find('input.sellorder_quantity'), true);
+        var rationalstore_after_tax = __read_number($(this), true);
+        var quantity = __read_number(row.find('input.rationalstore_quantity'), true);
 
-        var sub_total_after_tax = sellorder_after_tax * quantity;
+        var sub_total_after_tax = rationalstore_after_tax * quantity;
 
         //Tax
         var tax_rate = parseFloat(
             row
-                .find('select.sellorder_line_tax_id')
+                .find('select.rationalstore_line_tax_id')
                 .find(':selected')
                 .data('tax_amount')
         );
-        var sellorder_before_tax = __get_principle(sellorder_after_tax, tax_rate);
-        var sub_total_before_tax = quantity * sellorder_before_tax;
-        var tax = __calculate_amount('percentage', tax_rate, sellorder_before_tax);
+        var rationalstore_before_tax = __get_principle(rationalstore_after_tax, tax_rate);
+        var sub_total_before_tax = quantity * rationalstore_before_tax;
+        var tax = __calculate_amount('percentage', tax_rate, rationalstore_before_tax);
 
         //Update unit cost price before discount
         var discount_percent = __read_number(row.find('input.inline_discounts'), true);
-        var sellorder_before_discount = __get_principle(sellorder_before_tax, discount_percent, true);
+        var rationalstore_before_discount = __get_principle(rationalstore_before_tax, discount_percent, true);
         __write_number(
-            row.find('input.sellorder_unit_cost_without_discount'),
-            sellorder_before_discount,
+            row.find('input.rationalstore_unit_cost_without_discount'),
+            rationalstore_before_discount,
             true
         );
 
@@ -466,7 +466,7 @@ $(document).ready(function () {
         );
         __write_number(row.find('input.row_subtotal_after_tax_hidden'), sub_total_after_tax, true);
 
-        __write_number(row.find('.sellorder_unit_cost'), sellorder_before_tax, true);
+        __write_number(row.find('.rationalstore_unit_cost'), rationalstore_before_tax, true);
 
         row.find('.row_subtotal_before_tax').text(
             __currency_trans_from_en(sub_total_before_tax, false, true)
@@ -477,8 +477,8 @@ $(document).ready(function () {
             true
         );
 
-        row.find('.sellorder_product_unit_tax_text').text(__currency_trans_from_en(tax, true, true));
-        __write_number(row.find('input.sellorder_product_unit_tax'), tax);
+        row.find('.rationalstore_product_unit_tax_text').text(__currency_trans_from_en(tax, true, true));
+        __write_number(row.find('input.rationalstore_product_unit_tax'), tax);
 
         update_table_total();
         update_grand_total();
@@ -489,33 +489,27 @@ $(document).ready(function () {
     });
 
     //Purchase table
-    sellorder_table = $('#sellorder_table').DataTable({
+    rationalstore_table = $('#rationalstore_table').DataTable({
         processing: true,
         serverSide: false,
         aaSorting: [[0, 'desc']],
         ajax: {
-            url: '/sellorder',
+            url: '/rationalstore',
             data: function (d) {
-                if ($('#sellorder_list_filter_location_id').length) {
-                    d.location_id = $('#sellorder_list_filter_location_id').val();
+                if ($('#rationalstore_list_filter_location_id').length) {
+                    d.location_id = $('#rationalstore_list_filter_location_id').val();
                 }
-                if ($('#sellorder_list_filter_customer_id').length) {
-                    d.supplier_id = $('#sellorder_list_filter_customer_id').val();
-                }
-                if ($('#sellorder_list_filter_payment_status').length) {
-                    d.payment_status = $('#sellorder_list_filter_payment_status').val();
-                }
-                if ($('#sellorder_list_filter_status').length) {
-                    d.status = $('#sellorder_list_filter_status').val();
+                if ($('#rationalstore_list_filter_customer_id').length) {
+                    d.supplier_id = $('#rationalstore_list_filter_customer_id').val();
                 }
 
                 var start = '';
                 var end = '';
-                if ($('#sellorder_list_filter_date_range').val()) {
-                    start = $('input#sellorder_list_filter_date_range')
+                if ($('#rationalstore_list_filter_date_range').val()) {
+                    start = $('input#rationalstore_list_filter_date_range')
                         .data('daterangepicker')
                         .startDate.format('YYYY-MM-DD');
-                    end = $('input#sellorder_list_filter_date_range')
+                    end = $('input#rationalstore_list_filter_date_range')
                         .data('daterangepicker')
                         .endDate.format('YYYY-MM-DD');
                 }
@@ -525,7 +519,6 @@ $(document).ready(function () {
         },
         columnDefs: [
             {
-                targets: [7, 8],
                 orderable: false,
                 searchable: false,
             },
@@ -535,44 +528,33 @@ $(document).ready(function () {
             { data: 'ref_no', name: 'ref_no' },
             { data: 'location_name', name: 'BS.name' },
             { data: 'name', name: 'contacts.name' },
-            { data: 'status', name: 'status' },
-            { data: 'payment_status', name: 'payment_status' },
             { data: 'final_total', name: 'final_total' },
-            { data: 'payment_due', name: 'payment_due' },
             { data: 'action', name: 'action' },
         ],
         fnDrawCallback: function (oSettings) {
-            var total_sellorder = sum_table_col($('#sellorder_table'), 'final_total');
-            $('#footer_sellorder_total').text(total_sellorder);
+            var total_rationalstore = sum_table_col($('#rationalstore_table'), 'final_total');
+            $('#footer_rationalstore_total').text(total_rationalstore);
 
-            var total_due = sum_table_col($('#sellorder_table'), 'payment_due');
-            $('#footer_total_due').text(total_due);
+            var total_rationalstore_return_due = sum_table_col($('#rationalstore_table'), 'rationalstore_return');
+            $('#footer_total_rationalstore_return_due').text(total_rationalstore_return_due);
 
-            var total_sellorder_return_due = sum_table_col($('#sellorder_table'), 'sellorder_return');
-            $('#footer_total_sellorder_return_due').text(total_sellorder_return_due);
-
-            $('#footer_status_count').html(__sum_status_html($('#sellorder_table'), 'status-label'));
+            $('#footer_status_count').html(__sum_status_html($('#rationalstore_table'), 'status-label'));
 
             $('#footer_payment_status_count').html(
-                __sum_status_html($('#sellorder_table'), 'payment-status-label')
+                __sum_status_html($('#rationalstore_table'), 'payment-status-label')
             );
 
-            __currency_convert_recursively($('#sellorder_table'));
-        },
-        createdRow: function (row, data, dataIndex) {
-            $(row)
-                .find('td:eq(5)')
-                .attr('class', 'clickable_td');
+            __currency_convert_recursively($('#rationalstore_table'));
         },
     });
 
     $(document).on(
         'change',
-        '#sellorder_list_filter_location_id, \
-                    #sellorder_list_filter_customer_id, #sellorder_list_filter_payment_status,\
-                     #sellorder_list_filter_status',
+        '#rationalstore_list_filter_location_id, \
+                    #rationalstore_list_filter_customer_id, #rationalstore_list_filter_payment_status,\
+                     #rationalstore_list_filter_status',
         function () {
-            sellorder_table.ajax.reload();
+            rationalstore_table.ajax.reload();
         }
     );
 
@@ -614,7 +596,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#sellorder_entry_table tbody')
+    $('#rational_entry_table tbody')
         .find('.expiry_datepicker')
         .each(function () {
             $(this).datepicker({
@@ -627,10 +609,10 @@ $(document).ready(function () {
         var row = $(this).closest('tr');
         var profit_percent = __read_number($(this), true);
 
-        var sellorder_unit_cost = __read_number(row.find('input.sellorder_unit_cost'), true);
+        var rationalstore_unit_cost = __read_number(row.find('input.rationalstore_unit_cost'), true);
         var default_sell_price =
-            parseFloat(sellorder_unit_cost) +
-            __calculate_amount('percentage', profit_percent, sellorder_unit_cost);
+            parseFloat(rationalstore_unit_cost) +
+            __calculate_amount('percentage', profit_percent, rationalstore_unit_cost);
         var exchange_rate = $('input#exchange_rate').val();
         __write_number(
             row.find('input.default_sell_price'),
@@ -644,7 +626,7 @@ $(document).ready(function () {
         update_inline_profit_percentage(row);
     });
 
-    $('table#sellorder_table tbody').on('click', 'a.delete-sellorder', function (e) {
+    $('table#rationalstore_table tbody').on('click', 'a.delete-rationalstore', function (e) {
         e.preventDefault();
         swal({
             title: LANG.sure,
@@ -661,7 +643,7 @@ $(document).ready(function () {
                     success: function (result) {
                         if (result.success == true) {
                             toastr.success(result.msg);
-                            sellorder_table.ajax.reload();
+                            rationalstore_table.ajax.reload();
                         } else {
                             toastr.error(result.msg);
                         }
@@ -671,7 +653,7 @@ $(document).ready(function () {
         });
     });
 
-    $('table#sellorder_entry_table').on('change', 'select.sub_unit', function () {
+    $('table#rational_entry_table').on('change', 'select.sub_unit', function () {
         var tr = $(this).closest('tr');
         var base_unit_cost = tr.find('input.base_unit_cost').val();
         var base_unit_selling_price = tr.find('input.base_unit_selling_price').val();
@@ -688,47 +670,24 @@ $(document).ready(function () {
         var sp_element = tr.find('input.default_sell_price');
         __write_number(sp_element, unit_sp);
 
-        var cp_element = tr.find('input.sellorder_unit_cost_without_discount');
+        var cp_element = tr.find('input.rationalstore_unit_cost_without_discount');
         __write_number(cp_element, unit_cost);
         cp_element.change();
     });
-    
-    // $('table#sellorder_entry_table tbody').on('change', 'input.sellorder_quantity', function() {
-    //     $('table#sellorder_entry_table tbody').on('change', '.sellorder_quantity', function () {
-    //     var qty_element = $(this).closest('tr');
-    //     if ($(this).val()) {
-    //         var default_qty = $(this).data('qty_available');
-    //         var default_err_msg = $(this).data('msg_max_default');
-    //         console.log("default_qty",default_qty,default_err_msg,qty_element);
-    //         qty_element.attr('data-rule-max-value', default_qty);
-    //         qty_element.attr('data-msg-max-value', default_err_msg);
-    
-    //         qty_element.rules('add', {
-    //             'max-value': default_qty,
-    //             messages: {
-    //                 'max-value': default_err_msg,
-    //             },
-    //         });
-    //     }
-    //     qty_element.trigger('change');
-    // });
 });
 
-function get_sellorder_entry_row(product_id, variation_id,product_qty=1,date) {
+function get_rationalstore_entry_row(product_id, variation_id,product_qty=1) {
     if (product_id) {
 
         var add_via_ajax = true;
         var is_added     = false;
         var row_count    = $('#row_count').val();
 
-        $('#sellorder_entry_table tbody')
+        $('#rational_entry_table tbody')
             .find('tr')
             .each(function() {
                 var row_v_id = $(this)
                     .find('.hidden_variation_id')
-                    .val();
-                var sellOrderdate = $(this)
-                    .find('.sell_order_date')
                     .val();
                     
                 var enable_sr_no = $(this)
@@ -739,22 +698,19 @@ function get_sellorder_entry_row(product_id, variation_id,product_qty=1,date) {
                     modifiers_exist = true;
                 }
 
-                if (row_v_id == variation_id && !is_added && sellOrderdate == date
+                if (row_v_id == variation_id && !is_added
                 ) {
                     add_via_ajax = false;
                     is_added = true;
 
                     //Increment product quantity
-                    qty_element = $(this).find('.sellorder_quantity');
+                    qty_element = $(this).find('.rationalstore_quantity');
                     var qty = __read_number(qty_element);
                     __write_number(qty_element, (Number(qty) + Number(product_qty)));
                     qty_element.change();
 
                     //round_row_to_iraqi_dinnar($(this));
-                    update_table_total();
-                    update_grand_total();
-                    update_table_sr_number();
-
+                    
                     $('input#search_product')
                         .focus()
                         .select();
@@ -764,17 +720,17 @@ function get_sellorder_entry_row(product_id, variation_id,product_qty=1,date) {
         {
             $.ajax({
                 method: 'POST',
-                url: '/sellorder/get_sellorder_entry_row',
+                url: '/rationalstore/get_rationalstore_entry_row',
                 dataType: 'html',
-                data: { product_id: product_id, row_count: row_count, variation_id: variation_id,product_qty:product_qty,date:date },
+                data: { product_id: product_id, row_count: row_count, variation_id: variation_id,product_qty:product_qty },
                 success: function (result) {
                     $(result)
-                        .find('.sellorder_quantity')
+                        .find('.rationalstore_quantity')
                         .each(function () {
                             row = $(this).closest('tr');
 
-                            $('#sellorder_entry_table tbody').prepend(
-                                update_sellorder_entry_row_values(row)
+                            $('#rational_entry_table tbody').prepend(
+                                update_rationalstore_entry_row_values(row)
                             );
                             update_row_price_for_exchange_rate(row);
 
@@ -784,9 +740,9 @@ function get_sellorder_entry_row(product_id, variation_id,product_qty=1,date) {
                             update_grand_total();
                             update_table_sr_number();
                         });
-                    if ($(result).find('.sellorder_quantity').length) {
+                    if ($(result).find('.rationalstore_quantity').length) {
                         $('#row_count').val(
-                            $(result).find('.sellorder_quantity').length + parseInt(row_count)
+                            $(result).find('.rationalstore_quantity').length + parseInt(row_count)
                         );
                     }
                 },
@@ -798,14 +754,14 @@ function get_sellorder_entry_row(product_id, variation_id,product_qty=1,date) {
     }
 }
 
-function update_sellorder_entry_row_values(row) {
+function update_rationalstore_entry_row_values(row) {
     if (typeof row != 'undefined') {
-        var quantity = __read_number(row.find('.sellorder_quantity'), true);
-        var unit_cost_price = __read_number(row.find('.sellorder_unit_cost'), true);
+        var quantity = __read_number(row.find('.rationalstore_quantity'), true);
+        var unit_cost_price = __read_number(row.find('.rationalstore_unit_cost'), true);
         var row_subtotal_before_tax = quantity * unit_cost_price;
 
         var tax_rate = parseFloat(
-            $('option:selected', row.find('.sellorder_line_tax_id')).attr('data-tax_amount')
+            $('option:selected', row.find('.rationalstore_line_tax_id')).attr('data-tax_amount')
         );
 
         var unit_product_tax = __calculate_amount('percentage', tax_rate, unit_cost_price);
@@ -817,11 +773,11 @@ function update_sellorder_entry_row_values(row) {
             __currency_trans_from_en(row_subtotal_before_tax, false, true)
         );
         __write_number(row.find('.row_subtotal_before_tax_hidden'), row_subtotal_before_tax, true);
-        __write_number(row.find('.sellorder_product_unit_tax'), unit_product_tax, true);
-        row.find('.sellorder_product_unit_tax_text').text(
+        __write_number(row.find('.rationalstore_product_unit_tax'), unit_product_tax, true);
+        row.find('.rationalstore_product_unit_tax_text').text(
             __currency_trans_from_en(unit_product_tax, false, true)
         );
-        row.find('.sellorder_unit_cost_after_tax').text(
+        row.find('.rationalstore_unit_cost_after_tax').text(
             __currency_trans_from_en(unit_cost_price_after_tax, true)
         );
         row.find('.row_subtotal_after_tax').text(
@@ -848,16 +804,16 @@ function update_row_price_for_exchange_rate(row) {
         return true;
     }
 
-    var sellorder_unit_cost_without_discount =
-        __read_number(row.find('.sellorder_unit_cost_without_discount'), true) / exchange_rate;
+    var rationalstore_unit_cost_without_discount =
+        __read_number(row.find('.rationalstore_unit_cost_without_discount'), true) / exchange_rate;
     __write_number(
-        row.find('.sellorder_unit_cost_without_discount'),
-        sellorder_unit_cost_without_discount,
+        row.find('.rationalstore_unit_cost_without_discount'),
+        rationalstore_unit_cost_without_discount,
         true
     );
 
-    var sellorder_unit_cost = __read_number(row.find('.sellorder_unit_cost'), true) / exchange_rate;
-    __write_number(row.find('.sellorder_unit_cost'), sellorder_unit_cost, true);
+    var rationalstore_unit_cost = __read_number(row.find('.rationalstore_unit_cost'), true) / exchange_rate;
+    __write_number(row.find('.rationalstore_unit_cost'), rationalstore_unit_cost, true);
 
     var row_subtotal_before_tax_hidden =
         __read_number(row.find('.row_subtotal_before_tax_hidden'), true) / exchange_rate;
@@ -870,18 +826,18 @@ function update_row_price_for_exchange_rate(row) {
         true
     );
 
-    var sellorder_product_unit_tax =
-        __read_number(row.find('.sellorder_product_unit_tax'), true) / exchange_rate;
-    __write_number(row.find('input.sellorder_product_unit_tax'), sellorder_product_unit_tax, true);
-    row.find('.sellorder_product_unit_tax_text').text(
-        __currency_trans_from_en(sellorder_product_unit_tax, false, true)
+    var rationalstore_product_unit_tax =
+        __read_number(row.find('.rationalstore_product_unit_tax'), true) / exchange_rate;
+    __write_number(row.find('input.rationalstore_product_unit_tax'), rationalstore_product_unit_tax, true);
+    row.find('.rationalstore_product_unit_tax_text').text(
+        __currency_trans_from_en(rationalstore_product_unit_tax, false, true)
     );
 
-    var sellorder_unit_cost_after_tax =
-        __read_number(row.find('.sellorder_unit_cost_after_tax'), true) / exchange_rate;
+    var rationalstore_unit_cost_after_tax =
+        __read_number(row.find('.rationalstore_unit_cost_after_tax'), true) / exchange_rate;
     __write_number(
-        row.find('input.sellorder_unit_cost_after_tax'),
-        sellorder_unit_cost_after_tax,
+        row.find('input.rationalstore_unit_cost_after_tax'),
+        rationalstore_unit_cost_after_tax,
         true
     );
 
@@ -919,8 +875,8 @@ function update_inline_profit_percentage(row) {
     var exchange_rate = $('input#exchange_rate').val();
     default_sell_price_in_base_currency = default_sell_price / parseFloat(exchange_rate);
 
-    var sellorder_before_tax = __read_number(row.find('input.sellorder_unit_cost'), true);
-    var profit_percent = __get_rate(sellorder_before_tax, default_sell_price_in_base_currency);
+    var rationalstore_before_tax = __read_number(row.find('input.rationalstore_unit_cost'), true);
+    var profit_percent = __get_rate(rationalstore_before_tax, default_sell_price_in_base_currency);
     __write_number(row.find('input.profit_percent'), profit_percent, true);
 }
 
@@ -929,10 +885,10 @@ function update_table_total() {
     var total_st_before_tax = 0;
     var total_subtotal = 0;
 
-    $('#sellorder_entry_table tbody')
+    $('#rational_entry_table tbody')
         .find('tr')
         .each(function () {
-            total_quantity += __read_number($(this).find('.sellorder_quantity'), true);
+            total_quantity += __read_number($(this).find('.rationalstore_quantity'), true);
             total_st_before_tax += __read_number(
                 $(this).find('.row_subtotal_before_tax_hidden'),
                 true
@@ -992,7 +948,7 @@ $(document).on('change', 'input.payment-amount', function () {
 
 function update_table_sr_number() {
     var sr_number = 1;
-    $('table#sellorder_entry_table tbody')
+    $('table#rational_entry_table tbody')
         .find('.sr_number')
         .each(function () {
             $(this).text(sr_number);
@@ -1000,21 +956,21 @@ function update_table_sr_number() {
         });
 }
 
-$(document).on('click', 'button#submit_sellorder_form', function (e) {
+$(document).on('click', 'button#submit_rational_form', function (e) {
     e.preventDefault();
 
     //Check if product is present or not.
-    if ($('table#sellorder_entry_table tbody tr').length <= 0) {
+    if ($('table#rational_entry_table tbody tr').length <= 0) {
         toastr.warning(LANG.no_products_added);
         $('input#search_product').select();
         return false;
     }
 
-    $('form#add_sellorder_form').validate({
+    $('form#add_rationalstore_form').validate({
         rules: {
             ref_no: {
                 remote: {
-                    url: '/sellorder/check_ref_number',
+                    url: '/rationalstore/check_ref_number',
                     type: 'post',
                     data: {
                         ref_no: function () {
@@ -1023,9 +979,9 @@ $(document).on('click', 'button#submit_sellorder_form', function (e) {
                         contact_id: function () {
                             return $('#supplier_id').val();
                         },
-                        sellorder_id: function () {
-                            if ($('#sellorder_id').length > 0) {
-                                return $('#sellorder_id').val();
+                        rationalstore_id: function () {
+                            if ($('#rationalstore_id').length > 0) {
+                                return $('#rationalstore_id').val();
                             } else {
                                 return '';
                             }
@@ -1041,8 +997,8 @@ $(document).on('click', 'button#submit_sellorder_form', function (e) {
         },
     });
 
-    if ($('form#add_sellorder_form').valid()) {
-        $('form#add_sellorder_form').submit();
+    if ($('form#add_rationalstore_form').valid()) {
+        $('form#add_rationalstore_form').submit();
     }
 });
 
@@ -1050,7 +1006,7 @@ $('#add-product').click(function(){
     var product_id   = document.getElementById('product_id').value;
     var variation_id = document.getElementById('variation_id').value;
     var product_qty  = document.getElementById('product_qty').value;
-    var date         = document.getElementById('sellorderdate').value;
-    get_sellorder_entry_row(product_id, variation_id,product_qty,date);
+
+    get_rationalstore_entry_row(product_id, variation_id,product_qty);
 })
 

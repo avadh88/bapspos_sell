@@ -10,6 +10,7 @@ use App\Product;
 use App\ProductRack;
 use App\ProductVariation;
 use App\PurchaseLine;
+use App\RationingStore;
 use App\SellOrderLines;
 use App\SellReturnLines;
 use App\TaxRate;
@@ -1559,4 +1560,98 @@ class ProductUtil extends Util
         }
     
     }  
+
+    /**
+     * Add/Edit transaction sellorder lines
+     *
+     * @param object $transaction
+     * @param array $input_data
+     * @param array $currency_details
+     * @param boolean $enable_product_editing
+     * @param string $before_status = null
+     *
+     * @return array
+     */
+    public function createOrUpdateRationalStoreOrderLines($transaction, $input_data, $currency_details, $enable_product_editing, $before_status = null)
+    {
+        $updated_rationalstore_lines = [];
+        $updated_rationalstore_line_ids = [0];
+        $exchange_rate = $transaction->exchange_rate;
+
+        foreach ($input_data as $data) {
+            $multiplier = 1;
+            if (isset($data['sub_unit_id']) && $data['sub_unit_id'] == $data['product_unit_id']) {
+                unset($data['sub_unit_id']);
+            }
+
+            if (!empty($data['sub_unit_id'])) {
+                $unit = Unit::find($data['sub_unit_id']);
+                $multiplier = !empty($unit->base_unit_multiplier) ? $unit->base_unit_multiplier : 1;
+            }
+            $new_quantity = $this->num_uf($data['quantity']) * $multiplier;
+
+            $new_quantity_f = $this->num_f($new_quantity);
+            //update existing rationalstore line
+            if (isset($data['rationalstore_line_id'])) {
+                $rationalstore_line = RationingStore::findOrFail($data['rationalstore_line_id']);
+                $updated_rationalstore_line_ids[] = $rationalstore_line->id;
+                $old_qty = $this->num_f($rationalstore_line->quantity);
+            } else {
+                //create newly added rationalstore lines
+                $rationalstore_line = new RationingStore();
+                $rationalstore_line->product_id = $data['product_id'];
+                $rationalstore_line->variation_id = $data['variation_id'];
+            }
+
+            $data['pp_without_discount']    = $data['purchase_price'];
+            $data['discount_percent']       = 0;
+            $data['purchase_price_inc_tax'] = $data['purchase_price'];
+            $data['item_tax']               = 0.00;
+            $data['default_sell_price']     = $data['purchase_price'];
+
+            $rationalstore_line->quantity = $new_quantity;
+            $rationalstore_line->pp_without_discount = ($this->num_uf($data['pp_without_discount'], $currency_details) * $exchange_rate) / $multiplier;
+            $rationalstore_line->discount_percent = $this->num_uf($data['discount_percent'], $currency_details);
+            $rationalstore_line->purchase_price = ($this->num_uf($data['purchase_price'], $currency_details) * $exchange_rate) / $multiplier;
+            $rationalstore_line->purchase_price_inc_tax = ($this->num_uf($data['purchase_price_inc_tax'], $currency_details) * $exchange_rate) / $multiplier;
+            $rationalstore_line->item_tax = ($this->num_uf($data['item_tax'], $currency_details) * $exchange_rate) / $multiplier;
+            $rationalstore_line->tax_id = $data['rationalstore_line_tax_id'];
+            $rationalstore_line->lot_number = !empty($data['lot_number']) ? $data['lot_number'] : null;
+            $rationalstore_line->mfg_date = !empty($data['mfg_date']) ? $this->uf_date($data['mfg_date']) : null;
+            $rationalstore_line->exp_date = !empty($data['exp_date']) ? $this->uf_date($data['exp_date']) : null;
+            $rationalstore_line->sub_unit_id = !empty($data['sub_unit_id']) ? $data['sub_unit_id'] : null;
+            // $rationalstore_line->sell_order_date = !empty($data['sell_order_date']) ? $this->uf_date($data['sell_order_date']) : null;
+
+            $updated_rationalstore_lines[] = $rationalstore_line;
+            //var_dump($updated_rationalstore_lines); exit;
+
+        }
+
+
+        //unset deleted rationalstore lines
+        $delete_rationalstore_line_ids = [];
+        $delete_rationalstore_lines = null;
+        if (!empty($updated_rationalstore_line_ids)) {
+            $delete_rationalstore_lines = RationingStore::where('transaction_id', $transaction->id)
+                ->whereNotIn('id', $updated_rationalstore_line_ids)
+                ->get();
+
+            if ($delete_rationalstore_lines->count()) {
+                foreach ($delete_rationalstore_lines as $delete_rationalstore_line) {
+                    $delete_rationalstore_line_ids[] = $delete_rationalstore_line->id;
+                }
+                //Delete deleted sellorder lines
+                RationingStore::where('transaction_id', $transaction->id)
+                    ->whereIn('id', $delete_rationalstore_line_ids)
+                    ->delete();
+            }
+        }
+
+        //update rationalstore lines
+        if (!empty($updated_rationalstore_lines)) {
+            $transaction->rationalstore_lines()->saveMany($updated_rationalstore_lines);
+        }
+
+        return $delete_rationalstore_lines;
+    }
 }

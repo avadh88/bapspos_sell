@@ -364,4 +364,12 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     //Customer Groups
     Route::resource('custom-requirements', 'CustomRequirementsController');
     
+    //Rational Store
+    Route::post('/rationalstore/get_sellorder_entry_row', 'RationalStoreController@getSellOrderEntryRow');
+    Route::get('/rationalstore/get_products', 'RationalStoreController@getProducts');
+    Route::get('/rationalstore/get_suppliers', 'RationalStoreController@getSuppliers');
+    Route::post('/rationalstore/get_rationalstore_entry_row', 'RationalStoreController@getRationingEntryRow');
+    Route::post('/rationalstore/check_ref_number', 'RationalStoreController@checkRefNumber');
+    Route::resource('rationalstore', 'RationalStoreController');
+    
 });

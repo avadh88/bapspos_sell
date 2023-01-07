@@ -120,7 +120,8 @@ return [
     'custom-messages' => [
         'quantity_not_available' => 'Only :qty :unit available',
         'quantity_return' => 'Only :qty :unit can be returned',
-        'this_field_is_required' => 'This field is required'
+        'this_field_is_required' => 'This field is required',
+        'quotas_sell' => 'quotas= :quotas sell= :sell',
     ],
     'recaptcha'=>'Please validate recaptcha',
     'captcha'=>'Please validate recaptcha'
