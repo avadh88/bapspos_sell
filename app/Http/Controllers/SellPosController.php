@@ -310,7 +310,7 @@ class SellPosController extends Controller
 
         try {
             $input = $request->except('_token');
-
+           
             $storeProduct = [];
             $storeProduct2 = [];
             foreach($input['products'] as $productData)
@@ -2497,5 +2497,96 @@ class SellPosController extends Controller
         $business_id = 1;
         $category = Category::where('business_id', $business_id)->get();
         return view('sale_pos.categorywise_list')->with(compact('category'));
+    }
+
+    public function getPurchaseEntryRow(Request $request)
+    {
+
+        if (request()->ajax()) {
+            $product_id = $request->input('product_id');
+            $variation_id = $request->input('variation_id');
+            $business_id = request()->session()->get('user.business_id');
+            $product_qty = $request->input('product_qty');
+            $product_arr = $request->input('product_arr');
+
+            $hide_tax = 'hide';
+            if ($request->session()->get('business.enable_inline_tax') == 1) {
+                $hide_tax = '';
+            }
+
+            $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
+
+            if (!empty($product_arr)) {
+                for ($i = 0; $i < count($product_arr); $i++) {
+                    $product_id = $product_arr[$i];
+                    $variation_id = $product_arr[$i];
+                    if (!empty($product_id)) {
+                        $row_count = $request->input('row_count');
+                        $product = Product::where('id', $product_id)
+                            ->with(['unit'])
+                            ->first();
+
+                        $sub_units = $this->productUtil->getSubUnits($business_id, $product->unit->id);
+
+                        $query = Variation::where('product_id', $product_id)
+                            ->with(['product_variation']);
+                        if ($variation_id !== '0') {
+                            $query->where('id', $variation_id);
+                        }
+
+                        $variations =  $query->get();
+
+                        $taxes = TaxRate::where('business_id', $business_id)
+                            ->get();
+
+                        echo  view('purchase.partials.purchase_entry_row')
+                            ->with(compact(
+                                'product',
+                                'variations',
+                                'row_count',
+                                'variation_id',
+                                'taxes',
+                                'currency_details',
+                                'hide_tax',
+                                'sub_units',
+                                'product_qty'
+                            ));
+                    }
+                }
+            } else
+
+                if (!empty($product_id)) {
+                $row_count = $request->input('row_count');
+                $product = Product::where('id', $product_id)
+                    ->with(['unit'])
+                    ->first();
+
+                $sub_units = $this->productUtil->getSubUnits($business_id, $product->unit->id);
+
+                $query = Variation::where('product_id', $product_id)
+                    ->with(['product_variation']);
+                if ($variation_id !== '0') {
+                    $query->where('id', $variation_id);
+                }
+
+                $variations =  $query->get();
+
+                $taxes = TaxRate::where('business_id', $business_id)
+                    ->get();
+
+                return view('purchase.partials.purchase_entry_row')
+                    ->with(compact(
+                        'product',
+                        'variations',
+                        'row_count',
+                        'variation_id',
+                        'taxes',
+                        'currency_details',
+                        'hide_tax',
+                        'sub_units',
+                        'product_qty'
+                    ));
+            }
+        }
     }
 }

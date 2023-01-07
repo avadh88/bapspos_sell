@@ -151,7 +151,7 @@
 						</div>
 						@endif
 						<div class="clearfix"></div>
-						<div id="seva_return">
+						<!-- <div id="seva_return hide">
 							<div class="col-sm-6">
 								<div class="form-group">
 								{!! Form::label('return_seva_by_customer_id',"Seva return supplier") !!}
@@ -168,11 +168,39 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
+						
 
 						<div class="clearfix"></div>
 
-						<div class="@if(!empty($commission_agent)) col-sm-4 @else col-sm-6 @endif">
+						<div id="sell_order">
+							<div class="col-sm-6">
+								<div class="form-group">
+
+								<div class="input-group">
+									{!! Form::text('sell_order_no','', ['class' => 'form-control input_number', 'placeholder' => __('Sell Order ID'),
+									'autofocus' => is_null($default_location)? false : true, 'id' => 'sell_order_no']); !!}
+									<span class="input-group-btn input-space" style="padding-left:15px;">
+										<button type="button" id="add-product-by-sell-order" class="btn btn-primary pull-right btn-flat">@lang('Fetch')</button>
+   									</span>
+								</div>
+								
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-btn input-space" style="padding-left:15px;">
+											
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+
+						<div class="hide @if(!empty($commission_agent))  col-sm-4 @else col-sm-6 @endif">
 							<div class="form-group">
 								<div class="input-group">
 									<span class="input-group-addon">
@@ -192,7 +220,7 @@
 							</div>
 						</div>
 
-						<div class="@if(!empty($commission_agent)) col-sm-4 @else col-sm-4 @endif">
+						<div class="hide @if(!empty($commission_agent)) col-sm-4 @else col-sm-4 @endif">
 							<div class="form-group">
 								<div class="input-group">
 									{!! Form::text('product_qty','', ['class' => 'form-control input_number', 'placeholder' => __('sale.qty'),'disabled' => is_null($default_location)? true : false,

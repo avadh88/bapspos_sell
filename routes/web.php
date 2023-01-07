@@ -353,6 +353,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/sellorder/get_suppliers', 'SellOrderController@getSuppliers');
     Route::post('/sellorder/check_ref_number', 'SellOrderController@checkRefNumber');
     Route::get('/sellorder/print/{id}', 'SellOrderController@printInvoice');
+    Route::post('/sellorderdetails', 'SellOrderController@sellorderdetails');
     Route::resource('sellorder', 'SellOrderController');
     // Route::get('/t', function () {
     //     event(new \App\Events\SendMessage());
@@ -371,5 +372,6 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::post('/rationalstore/get_rationalstore_entry_row', 'RationalStoreController@getRationingEntryRow');
     Route::post('/rationalstore/check_ref_number', 'RationalStoreController@checkRefNumber');
     Route::resource('rationalstore', 'RationalStoreController');
+    Route::post('/sell_order/get_order_entry_row', 'SellPosController@getPurchaseEntryRow');
     
 });

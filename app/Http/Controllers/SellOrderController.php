@@ -1028,4 +1028,56 @@ class SellOrderController extends Controller
 
         return $output;
     }
+
+    public function sellorderdetails(Request $request)
+    {
+        
+        $business_id = request()->session()->get('user.business_id');
+        if (request()->ajax()) {
+            $location_id= $request->input('location_id');
+            $ref_no= $request->input('sell_order');
+
+            $business_id = request()->session()->get('user.business_id');
+
+            //Check if subscribed or not
+            if (!$this->moduleUtil->isSubscribed($business_id)) {
+                return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
+            }
+
+            
+
+            
+            $business = Business::find($business_id);
+
+            $currency_details = $this->transactionUtil->sellorderCurrencyDetails($business_id);
+
+            $taxes = TaxRate::where('business_id', $business_id)
+                                ->get();
+            $sellorder = Transaction::where('business_id', $business_id)
+                        ->where('ref_no', $ref_no)
+                        ->where('type', 'sellorder')
+                        ->where('location_id', $location_id)
+                        ->with(
+                            'contact',
+                            'sellorder_lines',
+                            'sellorder_lines.product',
+                            'sellorder_lines.product.unit',
+                            'sellorder_lines.variations',
+                            'sellorder_lines.variations.product_variation',
+                            'sellorder_lines.sub_unit',
+                            'location',
+                            'payment_lines',
+                            'tax'
+                        )
+                        ->first();
+        
+
+            $business_details = $this->businessUtil->getDetails($business_id);
+            $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
+            
+            $output['success'] = true;
+            $output['html_content'] = view('sellorder.product_row')->with(compact('sellorder'))->render();
+            return $output;
+        }
+    }
 }
