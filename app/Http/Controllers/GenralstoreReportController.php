@@ -356,7 +356,7 @@ class GenralstoreReportController extends Controller
 
                     
                     $sellQty   = empty($products->pluck('quantity')->toArray()) ? 0 : $products->pluck('quantity')->first();
-                    $_SESSION['purchase_qty']==$sellQty;
+                    $_SESSION['purchase_qty']=$sellQty;
                     return $sellQty;
                     // return '<span class="current_stock" data-orig-value="0" >0</span>';
                 })
