@@ -30,7 +30,7 @@ return [
     'document_size_limit' => '1000000', //in Bytes,
     'image_size_limit' => '500000', //in Bytes
 
-    'asset_version' => 42,
+    'asset_version' => 43,
 
     'disable_expiry' => false,
 
