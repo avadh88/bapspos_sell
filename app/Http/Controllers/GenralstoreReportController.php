@@ -356,7 +356,7 @@ class GenralstoreReportController extends Controller
 
                     
                     $sellQty   = empty($products->pluck('quantity')->toArray()) ? 0 : $products->pluck('quantity')->first();
-                    $purchasable=$sellQty;
+                    $_SESSION['purchase_qty']==$sellQty;
                     return $sellQty;
                     // return '<span class="current_stock" data-orig-value="0" >0</span>';
                 })
@@ -534,7 +534,7 @@ class GenralstoreReportController extends Controller
                     $remainProduct=$row->quantity-$deliveredQty;
                     
                     $_SESSION['remainProduct']=$remainProduct;
-                    $_SESSION['outstanding']=$purchasable-$row->quantity;
+                    $_SESSION['outstanding']=$_SESSION['purchase_qty']-$row->quantity;
                     $outstanding=$purchasable-$row->quantity;
                     
                     return $sellQty-$returnQty;
