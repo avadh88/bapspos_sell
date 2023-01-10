@@ -279,6 +279,8 @@ class GenralstoreReportController extends Controller
             $data = $products->toSql();
             
             $remainProduct=0;
+            $outstanding=0;
+            $purchasable=0;
             return Datatables::of($products)
                 
                 ->editColumn('quantity', function ($row) use ($date_range,$query_string) {
@@ -287,38 +289,76 @@ class GenralstoreReportController extends Controller
                     
                     return '<span class="quantity" data-orig-value="' . (float)$row->quantity . '" ><a href="/genralstore_reports/total_demand_deatil_report/'.$row->product_id.'/'.$date_range.'/print">' . (float)$row->quantity . '</a></span>';
                 })
-                ->addColumn('current_stock', function ($row) use ($permitted_locations,$location_id) {      
-                    $products = DB::table('variation_location_details as vld');
-                    $products->select(DB::raw('COALESCE(SUM(vld.qty_available),0) as current_stock'));
+                ->addColumn('purchase_qty', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct,$purchasable) { 
 
-                    if ($permitted_locations != 'all') 
+                    
+                    $products = DB::table('sell_order_lines as sol')
+                    ->join('transactions as trans', 'trans.id', '=', 'sol.transaction_id')
+                    ->select('trans.contact_id')->distinct();
+                    if (!empty($business_id)) 
                     {
-                    
-                        $locations_imploded = implode(', ', $permitted_locations);
-                        $products->whereIn('vld.location_id',[$locations_imploded]);
-                        
+                        $products->where('trans.business_id', $business_id);
                     }
-                    if (!empty($location_id)) 
+                    if (!empty($request->input('location_id'))) 
                     {
-                        $products->where('vld.location_id', $location_id);
+                        $products->where('trans.location_id', $request->input('location_id'));
                     }
-                    
-                    $products->where('vld.product_id',$row->product_id);
-                    
-                    $current_stock = $products->get()->first();
+                    if (!empty($request->input('ir_customer_id'))) 
+                    {
+                        $products->where('trans.contact_id', $request->input('ir_customer_id'));
+                    }
+                    $products->where('sol.product_id',$row->product_id);
+                    if (!empty($date_range)) {
+                        $date_range = $date_range;
+                        $date_range_array = explode('~', $date_range);
+                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
+                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
 
-                    return '<span class="current_stock" data-orig-value="'.$current_stock->current_stock.'" >'.$current_stock->current_stock.'</span>';
-                    // if($current_stock)
-                    // {echo "ok";
-                    //     var_dump($current_stock);
-                    //     exit;
-                        
-                    // }
-                    // else
-                    // {
-                    //     return '<span class="current_stock" data-orig-value="0" >0</span>';
-                    // }
+                        $products->whereDate('sol.sell_order_date', '>=', $start)
+                                ->whereDate('sol.sell_order_date', '<=', $end);
+                    }
+                    //$productsData = $products->groupBy('trans.contact_id')->get();
+                    $contactIds = $products->groupBy('trans.contact_id')->pluck('contact_id')->toArray();
                     
+
+
+                    $products = DB::table('purchase_lines as pl')
+                    ->join('transactions as trans', 'trans.id', '=', 'pl.transaction_id');
+
+                    $products->select(DB::raw('(COALESCE(sum(pl.quantity),0)) as quantity'));
+                    if (!empty($business_id)) 
+                    {
+                        $products->where('trans.business_id', $business_id);
+                    }
+                    if (!empty($request->input('location_id'))) 
+                    {
+                        $products->where('trans.location_id', $request->input('location_id'));
+                    }
+                    // // if (!empty($request->input('ir_customer_id'))) 
+                    // // {
+                        // $products->whereIn('trans.contact_id', $contactIds);
+                        $products->where('trans.type','purchase')->where('trans.status','received');
+                    // // }
+                    if (!empty($request->input('date_range'))) {
+                        $date_range = $request->input('date_range');
+                        $date_range_array = explode('~', $date_range);
+                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
+                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
+
+                        $products->whereDate('trans.transaction_date', '>=', $start)
+                                ->whereDate('trans.transaction_date', '<=', $end);
+                    }
+                    
+                    $products->where('pl.product_id',$row->product_id);
+                    
+                    
+                    $products->groupBy('pl.product_id');
+
+                    
+                    $sellQty   = empty($products->pluck('quantity')->toArray()) ? 0 : $products->pluck('quantity')->first();
+                    $purchasable=$sellQty;
+                    return $sellQty;
+                    // return '<span class="current_stock" data-orig-value="0" >0</span>';
                 })
                 ->addColumn('current_stock', function ($row) use ($permitted_locations,$location_id) {      
                     $products = DB::table('variation_location_details as vld');
@@ -353,7 +393,40 @@ class GenralstoreReportController extends Controller
                     // }
                     
                 })
-                ->addColumn('delivered', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct) { 
+                ->addColumn('current_stock', function ($row) use ($permitted_locations,$location_id) {      
+                    $products = DB::table('variation_location_details as vld');
+                    $products->select(DB::raw('COALESCE(SUM(vld.qty_available),0) as current_stock'));
+
+                    if ($permitted_locations != 'all') 
+                    {
+                    
+                        $locations_imploded = implode(', ', $permitted_locations);
+                        $products->whereIn('vld.location_id',[$locations_imploded]);
+                        
+                    }
+                    if (!empty($location_id)) 
+                    {
+                        $products->where('vld.location_id', $location_id);
+                    }
+                    
+                    $products->where('vld.product_id',$row->product_id);
+                    
+                    $current_stock = $products->get()->first();
+
+                    return '<span class="current_stock" data-orig-value="'.$current_stock->current_stock.'" >'.$current_stock->current_stock.'</span>';
+                    // if($current_stock)
+                    // {echo "ok";
+                    //     var_dump($current_stock);
+                    //     exit;
+                        
+                    // }
+                    // else
+                    // {
+                    //     return '<span class="current_stock" data-orig-value="0" >0</span>';
+                    // }
+                    
+                })
+                ->addColumn('delivered', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct,$purchasable) { 
 
                     
                     $products = DB::table('sell_order_lines as sol')
@@ -457,15 +530,19 @@ class GenralstoreReportController extends Controller
                     $returnQty = empty($productsReturn->pluck('quantity')->toArray()) ? 0 : $productsReturn->pluck('quantity')->first();
                     $deliveredQty = $sellQty-$returnQty;
                     $remainProduct=0;
+                    $outstanding=0;
                     $remainProduct=$row->quantity-$deliveredQty;
+                    
                     $_SESSION['remainProduct']=$remainProduct;
+                    $_SESSION['outstanding']=$purchasable-$row->quantity;
+                    $outstanding=$purchasable-$row->quantity;
                     
                     return $sellQty-$returnQty;
                     // return '<span class="current_stock" data-orig-value="0" >0</span>';
                 })
-                ->addColumn('outstanding', function ($row) use ($remainProduct) { 
+                ->addColumn('outstanding', function ($row) use ($remainProduct,$outstanding) { 
                     
-                    return '<span class="pending" data-orig-value="'.$remainProduct.'" >'.$_SESSION['remainProduct'].'</span>';
+                    return '<span class="pending" data-orig-value="'.$_SESSION['outstanding'].'" >'.$_SESSION['outstanding'].'</span>';
                 })
                 ->addColumn('purchasable', function ($row) use ($permitted_locations,$location_id) { 
                     $pending = $row->total_sold - $row->total_returned;
@@ -640,76 +717,7 @@ class GenralstoreReportController extends Controller
                     $pending = $row->total_sold - $row->total_returned;
                     return '<span class="pending" data-orig-value="'.$pending.'" >'.$pending.'</span>';
                 })
-                ->addColumn('purchase_qty', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct) { 
-
-                    
-                    $products = DB::table('sell_order_lines as sol')
-                    ->join('transactions as trans', 'trans.id', '=', 'sol.transaction_id')
-                    ->select('trans.contact_id')->distinct();
-                    if (!empty($business_id)) 
-                    {
-                        $products->where('trans.business_id', $business_id);
-                    }
-                    if (!empty($request->input('location_id'))) 
-                    {
-                        $products->where('trans.location_id', $request->input('location_id'));
-                    }
-                    if (!empty($request->input('ir_customer_id'))) 
-                    {
-                        $products->where('trans.contact_id', $request->input('ir_customer_id'));
-                    }
-                    $products->where('sol.product_id',$row->product_id);
-                    if (!empty($date_range)) {
-                        $date_range = $date_range;
-                        $date_range_array = explode('~', $date_range);
-                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
-                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
-
-                        $products->whereDate('sol.sell_order_date', '>=', $start)
-                                ->whereDate('sol.sell_order_date', '<=', $end);
-                    }
-                    //$productsData = $products->groupBy('trans.contact_id')->get();
-                    $contactIds = $products->groupBy('trans.contact_id')->pluck('contact_id')->toArray();
-                    
-
-
-                    $products = DB::table('purchase_lines as pl')
-                    ->join('transactions as trans', 'trans.id', '=', 'pl.transaction_id');
-
-                    $products->select(DB::raw('(COALESCE(sum(pl.quantity),0)) as quantity'));
-                    if (!empty($business_id)) 
-                    {
-                        $products->where('trans.business_id', $business_id);
-                    }
-                    if (!empty($request->input('location_id'))) 
-                    {
-                        $products->where('trans.location_id', $request->input('location_id'));
-                    }
-                    // // if (!empty($request->input('ir_customer_id'))) 
-                    // // {
-                        // $products->whereIn('trans.contact_id', $contactIds);
-                        $products->where('trans.type','purchase')->where('trans.status','received');
-                    // // }
-                    if (!empty($request->input('date_range'))) {
-                        $date_range = $request->input('date_range');
-                        $date_range_array = explode('~', $date_range);
-                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
-                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
-
-                        $products->whereDate('trans.transaction_date', '>=', $start)
-                                ->whereDate('trans.transaction_date', '<=', $end);
-                    }
-                    
-                    $products->where('pl.product_id',$row->product_id);
-                    
-                    
-                    $products->groupBy('pl.product_id');
-
-                    
-                    $sellQty   = empty($products->pluck('quantity')->toArray()) ? 0 : $products->pluck('quantity')->first();
-                    return $sellQty;
-                    // return '<span class="current_stock" data-orig-value="0" >0</span>';
-                })
+                
                 ->rawColumns(['quantity','purchase_price','subtotal','current_stock','pending','delivered','outstanding','purchase_qty'])
                 ->make(true);
         }
