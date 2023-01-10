@@ -525,7 +525,7 @@ $(document).ready(function () {
         },
         columnDefs: [
             {
-                targets: [7, 8],
+                targets: [8, 9],
                 orderable: false,
                 searchable: false,
             },
