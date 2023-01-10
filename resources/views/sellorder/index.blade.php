@@ -59,6 +59,7 @@
                             <th>@lang('sellorder.payment_status')</th>
                             <th>@lang('sellorder.grand_total')</th>
                             <th>@lang('sellorder.payment_due') &nbsp;&nbsp;<i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="bottom" data-html="true" data-original-title="{{ __('messages.purchase_due_tooltip')}}" aria-hidden="true"></i></th>
+                            <th>Notes</th>
                             <th>@lang('messages.action')</th>
                         </tr>
                     </thead>
@@ -71,6 +72,7 @@
                             <td class="text-left"><small>@lang('report.purchase_due') - <span class="display_currency" id="footer_total_due" data-currency_symbol ="true"></span><br>
                             @lang('lang_v1.purchase_return') - <span class="display_currency" id="footer_total_purchase_return_due" data-currency_symbol ="true"></span>
                             </small></td>
+                            <td></td>
                             <td></td>
                         </tr>
                     </tfoot>

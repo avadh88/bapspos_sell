@@ -85,6 +85,7 @@ class SellOrderController extends Controller
                     ->where('transactions.type', 'sellorder')
                     ->select(
                         'transactions.id',
+                        'transactions.additional_notes',
                         'transactions.document',
                         'transactions.transaction_date',
                         'transactions.ref_no',
@@ -1035,7 +1036,8 @@ class SellOrderController extends Controller
         $business_id = request()->session()->get('user.business_id');
         if (request()->ajax()) {
             $location_id= $request->input('location_id');
-            $ref_no= $request->input('sell_order');
+            $customer_id= $request->input('customer_id',null);
+            $ref_no= $request->input('sell_order',null);
 
             $business_id = request()->session()->get('user.business_id');
 
@@ -1053,9 +1055,20 @@ class SellOrderController extends Controller
 
             $taxes = TaxRate::where('business_id', $business_id)
                                 ->get();
-            $sellorder = Transaction::where('business_id', $business_id)
-                        ->where('ref_no', $ref_no)
-                        ->where('type', 'sellorder')
+            $data = Transaction::where('business_id', $business_id);
+            if(!empty($ref_no))
+            {
+                $data->where('ref_no', $ref_no);
+            }
+
+            if(!empty($customer_id))
+            {
+                $data->where('contact_id', $customer_id);
+            }
+
+            
+
+            $data->where('type', 'sellorder')
                         ->where('location_id', $location_id)
                         ->with(
                             'contact',
@@ -1068,10 +1081,9 @@ class SellOrderController extends Controller
                             'location',
                             'payment_lines',
                             'tax'
-                        )
-                        ->first();
-        
-
+                        );
+            $sellorder=$data->get();
+            
             $business_details = $this->businessUtil->getDetails($business_id);
             $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
             
