@@ -1,21 +1,13 @@
 <div class="row text-center">
     <div class="col-xs-12">
-        <h2 style="font-size: 24px;" class="page-header"><b>@lang('lang_v1.gate_pass')</b></h2>
+        <h2 style="font-size: 24px;" class="page-header"><b>@lang('lang_v1.gate_pass')</b><span style="font-size: 18px;"> ( {{$gatePassData->duplicate}} )</span></b></h2>
     </div>
 </div>
-
-<div class="row text-center">
-    <div class="col-xs-12">
-        <h3 style="font-size: 18px;">{{$gatePassData->duplicate}}</h3>
-    </div>
-</div>
-<hr>
-
 <div class="row">
     <div class="col-xs-12">
         <h5 class="page-header" style="font-size: 16px;">
-            <b>@lang('gate_pass.serial_no'):</b> #{{ $gatePassData->serial_no }}
-            <small class="pull-right"><b>@lang('messages.date'):</b> {{ @format_date($gatePassData->date) }}</small>
+            <b>@lang('gate_pass.serial_no'):</b> #{{ $gatePassData->serial_no }} ({{ @format_datetime($gatePassData->date) }})
+            <!-- <small class="pull-right"><b>@lang('messages.date'):</b> {{ @format_date($gatePassData->date) }}</small> -->
         </h5>
     </div>
 </div>
@@ -32,7 +24,6 @@
         <p><b>@lang('gate_pass.deliever_to'):</b> {{ $gatePassData->deliever_to }}</p>
     </div>
 </div>
-<hr>
 <!-- <br> -->
 <div class="modal-body">
     <div class="row">
