@@ -10,8 +10,8 @@ $(document).ready(function () {
         ajax: {
             url: '/gate-pass',
             data: function (d) {
-                if ($('#gate_pass_filter_serial_id').length) {
-                    d.serial_id = $('#gate_pass_filter_serial_id').val();
+                if ($('#gate_pass_filter_serial_no').length) {
+                    d.serial_no = $('#gate_pass_filter_serial_no').val();
                 }
 
                 var start = '';
@@ -160,6 +160,8 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success) {
                         toastr.success(response.msg);
+                    } else if (response.success == 0) {
+                        toastr.error(response.msg);
                     } else {
                         $("#checkout-details").html(response);
                         $('#checkout-form').modal('show');
@@ -170,6 +172,13 @@ $(document).ready(function () {
         }
     });
 
+    $('#gate_pass_filter_serial_no').on('keyup', function (e) {
+        let key = e.which;
+        let serialNo = $("#gate_pass_filter_serial_no").val().length;
+        if (key == 13 || serialNo > 3 || serialNo == 0) {
+            gate_pass_table.ajax.reload();
+        }
+    });
 
 });
 function gatepass_print(receipt) {

@@ -12,11 +12,11 @@
 
 <!-- Main content -->
 <section class="content no-print">
-    <!-- @component('components.filters', ['title' => __('report.filters')])
+    @component('components.filters', ['title' => __('report.filters')])
     <div class="col-md-3">
         <div class="form-group">
-            {!! Form::label('gate_pass_filter_serial_id', __('rationalstore.business_location') . ':') !!}
-            {!! Form::text('gate_pass_filter_serial_id', null, ['class' => 'form-control']); !!}
+            {!! Form::label('gate_pass_filter_serial_no', __('rationalstore.business_location') . ':') !!}
+            {!! Form::text('gate_pass_filter_serial_no', null, ['class' => 'form-control']); !!}
         </div>
     </div>
     <div class="col-md-3">
@@ -25,7 +25,7 @@
             {!! Form::text('gate_pass_filter_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
         </div>
     </div>
-    @endcomponent -->
+    @endcomponent
 
     @component('components.widget', ['class' => 'box-primary', 'title' => __('gate_pass.gate_pass')])
     @slot('tool')
@@ -63,10 +63,10 @@
 @section('javascript')
 <script src="{{ asset('js/gate_pass.js?v=' . $asset_v) }}"></script>
 <script>
-        //Date range as a button
+    //Date range as a button
     $('#gate_pass_filter_date_range').daterangepicker(
         dateRangeSettings,
-        function (start, end) {
+        function(start, end) {
             $('#gate_pass_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
             gate_pass_table.ajax.reload();
         }

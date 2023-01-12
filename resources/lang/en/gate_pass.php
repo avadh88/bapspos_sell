@@ -29,6 +29,7 @@ return [
     'gate_pass_delete_success' => 'Gate Pass Details Deleted Successfully',
     'gate_pass_checkout_success' => 'Checkout Successfully',
     'gate_pass_already_checkout' => 'Already Checked Out',
+    'data_not_found' => 'Data Not Found',
     'vibhag_name' => 'Vibhag Name',
     'driver_name' => 'Driver Name',
     'driver_number' => 'Driver Number',
