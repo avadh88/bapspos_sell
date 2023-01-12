@@ -59,13 +59,13 @@ class GatePassController extends Controller
                 'serial_no'
             );
 
-            if (request()->has('serial_id')) {
-                $serial_id = request()->get('serial_id');
-                if (!empty($serial_id)) {
-                $query->where('serial_id', 'like', ["%{$serial_id}%"]);
+            // if (request()->has('serial_id')) {
+            //     $serial_id = request()->get('serial_id');
+            //     if (!empty($serial_id)) {
+            //     $query->where('serial_id', 'like', ["%{$serial_id}%"]);
                    
-                }
-            }
+            //     }
+            // }
 
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;

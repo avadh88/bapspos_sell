@@ -12,7 +12,7 @@
 
 <!-- Main content -->
 <section class="content no-print">
-    @component('components.filters', ['title' => __('report.filters')])
+    <!-- @component('components.filters', ['title' => __('report.filters')])
     <div class="col-md-3">
         <div class="form-group">
             {!! Form::label('gate_pass_filter_serial_id', __('rationalstore.business_location') . ':') !!}
@@ -25,7 +25,7 @@
             {!! Form::text('gate_pass_filter_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
         </div>
     </div>
-    @endcomponent
+    @endcomponent -->
 
     @component('components.widget', ['class' => 'box-primary', 'title' => __('gate_pass.gate_pass')])
     @slot('tool')
