@@ -33,7 +33,7 @@
 
 
                 <div class="col-sm-12 form-inline">
-                    <button type="button" id="submit_checkout_form" class="btn btn-primary btn-flat btn-modal"><i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+                    <button type="button" id="submit_checkout_form" class="btn btn-primary btn-flat btn-modal"> @lang( 'Next' )</button>
                 </div>
                 @endcan
             </div>
