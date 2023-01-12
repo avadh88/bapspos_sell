@@ -437,7 +437,7 @@ class GatePassController extends Controller
                 }
             } else {
                 $output = [
-                    'success' => 1,
+                    'success' => 0,
                     'msg' => __('gate_pass.data_not_found')
                 ];
                 return $output;
