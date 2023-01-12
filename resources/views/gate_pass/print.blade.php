@@ -1,6 +1,6 @@
 <div class="row text-center">
     <div class="col-xs-12">
-        <h2 style="font-size: 24px;"><b>@lang('lang_v1.gate_pass')</b></h2>
+        <h2 style="font-size: 24px;" class="page-header"><b>@lang('lang_v1.gate_pass')</b></h2>
     </div>
 </div>
 
