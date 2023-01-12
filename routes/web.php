@@ -374,4 +374,11 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('rationalstore', 'RationalStoreController');
     Route::post('/sell_order/get_order_entry_row', 'SellPosController@getPurchaseEntryRow');
     
+    // Gate Pass
+    Route::get('/gate-pass/print/{id}', 'GatePassController@printInvoice');
+    Route::get('/gate-pass/checkout-details', 'GatePassController@getCheckOutDetail');
+    Route::get('/gate-pass/check-out', 'GatePassController@checkOutIndex');
+    Route::get('/check-out', 'GatePassController@checkOut');
+    Route::resource('gate-pass', 'GatePassController');
+    
 });

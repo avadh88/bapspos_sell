@@ -914,6 +914,60 @@
           </div>
         </div>
         <hr>
+        <div class="row check_group">
+    <div class="col-md-1">
+      <h4>@lang( 'role.gate_pass' )</h4>
+    </div>
+    <div class="col-md-2">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" class="check_all input-icheck"> {{ __( 'role.select_all' ) }}
+        </label>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'gate_pass.view', in_array('gate_pass.view', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.gate_pass.view' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'gate_pass.create', in_array('gate_pass.create', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.gate_pass.create' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'gate_pass.update', in_array('gate_pass.update', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.gate_pass.update' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'gate_pass.delete', in_array('gate_pass.delete', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.gate_pass.delete' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'gate_pass.verify', in_array('gate_pass.verify', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.gate_pass.verify' ) }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
         <hr>
         <div class="row">
 

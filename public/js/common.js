@@ -80,6 +80,16 @@ $(document).ready(function() {
         }
     );
 
+    jQuery.validator.addMethod(
+        'max-digits',
+        function(value, element, param) {
+            return (value.length == param);
+        },
+        function(params, element) {
+            return $(element).data('msg-max-digits');
+        }
+    );
+
     jQuery.validator.addMethod('abs_digit', function(value, element) {
         return this.optional(element) || Number.isInteger(Math.abs(__number_uf(value)));
     });

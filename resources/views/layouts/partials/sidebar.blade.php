@@ -698,6 +698,27 @@
             </ul>
           </li>
         @endif
+
+        @if(auth()->user()->can('gate_pass.view') || auth()->user()->can('gate_pass.create') )
+        <li class="treeview {{ $request->segment(1) == 'gate-pass' ? 'active active-sub' : '' }}">
+          <a href="#"><i class="fa fa-database" aria-hidden="true"></i> <span>@lang('gate_pass.gate_pass')</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            @can('gate_pass.view')
+              <li class="{{ $request->segment(1) == 'gate-pass' && $request->segment(2) == null ? 'active' : '' }}"><a href="{{action('GatePassController@index')}}"><i class="fa fa-list"></i>@lang('gate_pass.list')</a></li>
+            @endcan
+            @can('gate_pass.create')
+              <li class="{{ $request->segment(1) == 'gate-pass' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('GatePassController@create')}}"><i class="fa fa-plus-circle"></i>@lang('gate_pass.add')</a></li>
+            @endcan
+            @can('gate_pass.verify')
+            <li class="{{ $request->segment(1) == 'gate-pass' && $request->segment(2) == 'check-out' ? 'active' : '' }}" ><a href="{{action('GatePassController@checkOutIndex')}}"><i class="fa fa-pencil-square" aria-hidden="true"></i>@lang('gate_pass.checkout')</a></li>
+            @endcan
+          </ul>
+        </li>
+        @endif
       </ul>
 
       <!-- /.sidebar-menu -->

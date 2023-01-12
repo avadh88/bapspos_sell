@@ -168,5 +168,14 @@
                 {!! Form::text('ref_no_prefixes[sell_return_genralstore]', $sell_return_genralstore_prefix, ['class' => 'form-control']); !!}
             </div>
         </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                @php
+                    $gate_pass_prefix = !empty($business->ref_no_prefixes['gate_pass_prefix']) ? $business->ref_no_prefixes['gate_pass_prefix'] : '';
+                @endphp
+                {!! Form::label('ref_no_prefixes[gate_pass_prefix]', __('lang_v1.gate_pass_prefix') . ':') !!}
+                {!! Form::text('ref_no_prefixes[gate_pass_prefix]', $gate_pass_prefix, ['class' => 'form-control']); !!}
+            </div>
+        </div>
     </div>
 </div>

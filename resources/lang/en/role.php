@@ -126,4 +126,11 @@ return [
     'rationalstore.update' => 'Ration Store Update',
     'rationalstore.delete' => 'Ration Store Delete',
     
+    'gate_pass' =>   'Gate Pass',
+    'gate_pass.view' =>   'Gate Pass View',
+    'gate_pass.create' => 'Gate Pass Create',
+    'gate_pass.update' => 'Gate Pass Update',
+    'gate_pass.delete' => 'Gate Pass Delete',
+    'gate_pass.verify' => 'CheckOut Gate Pass',
+
 ];

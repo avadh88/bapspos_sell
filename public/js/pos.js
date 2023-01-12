@@ -1287,6 +1287,61 @@ $(document).ready(function() {
         }
 
     })
+
+    $('#fetch-product-by-customer').on('click', function () {
+        let location_id = $("#location_id").val();
+        //let sell_order = $("#sell_order_no").val();
+        let customer_id = $('select#customer_id').val();
+        if(!customer_id)
+        {
+            toastr.error('Please select Customer ID')
+        }
+        // if(!sell_order)
+        // {
+        //     toastr.error('Please fill Demand order ID')
+        // }
+        if(!location_id)
+        {
+            toastr.error('Please Select Location ID')
+        }
+        else
+        {
+            $.ajax({
+                type: 'post',
+                url: '/sellorderdetails',
+                data: {
+                    location_id: location_id,
+                    customer_id:customer_id
+                },
+                dataType: 'json',
+                success: function (result) {
+                    
+                    $('table#pos_table tbody')
+                        .html(result.html_content)
+                        .find('input.pos_quantity');
+                    //increment row count
+                    //$('input#product_row_count').val(parseInt(product_row) + 1);
+                    var this_row = $('table#pos_table tbody')
+                        .find('tr')
+                        .last();
+                    pos_each_row(this_row);
+
+
+                    // qty_element = this_row.find('.pos_quantity');
+                    // var qty = __read_number(qty_element);
+                    // __write_number(qty_element, (Number(product_qty)));
+                    // qty_element.change();
+
+                    //For initial discount if present
+                    var line_total = __read_number(this_row.find('input.pos_line_total'));
+                    this_row.find('span.pos_line_total_text').text(line_total);
+
+                    pos_total_row();
+                },
+            });
+        }
+
+    })
 });
 
 function get_product_suggestion_list(category_id, brand_id, location_id, url = null) {
