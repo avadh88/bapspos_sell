@@ -699,7 +699,7 @@
           </li>
         @endif
 
-        @if(auth()->user()->can('gate_pass.view') || auth()->user()->can('gate_pass.create') )
+        @if(auth()->user()->can('gate_pass.view') || auth()->user()->can('gate_pass.create') || auth()->user()->can('gate_pass.verify') )
         <li class="treeview {{ $request->segment(1) == 'gate-pass' ? 'active active-sub' : '' }}">
           <a href="#"><i class="fa fa-database" aria-hidden="true"></i> <span>@lang('gate_pass.gate_pass')</span>
             <span class="pull-right-container">
