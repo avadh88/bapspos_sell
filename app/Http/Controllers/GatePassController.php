@@ -59,19 +59,19 @@ class GatePassController extends Controller
                 'serial_no'
             );
 
-            // if (request()->has('serial_id')) {
-            //     $serial_id = request()->get('serial_id');
-            //     if (!empty($serial_id)) {
-            //     $query->where('serial_id', 'like', ["%{$serial_id}%"]);
-                   
-            //     }
-            // }
+            if (request()->has('serial_no')) {
+                $serial_no = request()->get('serial_no');
+                if (!empty($serial_no)) {
+                    $query->where('serial_no', $serial_no);
+                    // $query->where('serial_no', 'like', ["%{$serial_no}%"]);
+                }
+            }
 
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;
                 $query->whereDate('date', '>=', $start)
-                            ->whereDate('date', '<=', $end);
+                    ->whereDate('date', '<=', $end);
             }
 
             $gatePassData = $query->orderBy('id', "DESC");
@@ -99,6 +99,7 @@ class GatePassController extends Controller
                     $html .=  '</ul></div>';
                     return $html;
                 })
+                ->editColumn('check_in', '{{@format_datetime($check_in)}}')
                 ->editColumn(
                     'check_out',
                     '@if($check_out == "0000-00-00 00:00:00")  @else {{@format_datetime($check_out)}} @endif'
@@ -426,10 +427,18 @@ class GatePassController extends Controller
             $gatePassData = GatePass::where('serial_no', $data)
                 ->with(['values'])->first();
 
-            if ($gatePassData['check_out'] != "0000-00-00 00:00:00") {
+            if (!empty($gatePassData)) {
+                if ($gatePassData['check_out'] != "0000-00-00 00:00:00") {
+                    $output = [
+                        'success' => 1,
+                        'msg' => __('gate_pass.gate_pass_already_checkout')
+                    ];
+                    return $output;
+                }
+            } else {
                 $output = [
                     'success' => 1,
-                    'msg' => __('gate_pass.gate_pass_already_checkout')
+                    'msg' => __('gate_pass.data_not_found')
                 ];
                 return $output;
             }
@@ -439,9 +448,8 @@ class GatePassController extends Controller
                 'success' => 0,
                 'msg' => $e->getMessage()
             ];
-            return back()->with('status', $output);
+            return $output;
         }
-
         return view('gate_pass.ajax_checkout', compact('gatePassData'));
     }
 
