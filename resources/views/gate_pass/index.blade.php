@@ -15,7 +15,7 @@
     @component('components.filters', ['title' => __('report.filters')])
     <div class="col-md-3">
         <div class="form-group">
-            {!! Form::label('gate_pass_filter_serial_no', __('rationalstore.business_location') . ':') !!}
+            {!! Form::label('gate_pass_filter_serial_no', __('gate_pass.serial_no') . ':') !!}
             {!! Form::text('gate_pass_filter_serial_no', null, ['class' => 'form-control']); !!}
         </div>
     </div>
@@ -39,12 +39,12 @@
             <thead>
                 <tr>
                     <th>@lang('gate_pass.serial_no')</th>
+                    <th>@lang('messages.date')</th>
                     <th>@lang('gate_pass.vibhag_name')</th>
                     <th>@lang('gate_pass.driver_name')</th>
                     <th>@lang('gate_pass.driver_number')</th>
                     <th>@lang('gate_pass.vehicle_number')</th>
                     <th>@lang('gate_pass.deliever_to')</th>
-                    <th>@lang('messages.date')</th>
                     <th>@lang('gate_pass.check_in')</th>
                     <th>@lang('gate_pass.checkout')</th>
                     <th>@lang('messages.action')</th>

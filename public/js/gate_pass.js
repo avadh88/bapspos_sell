@@ -36,12 +36,12 @@ $(document).ready(function () {
         ],
         columns: [
             { data: 'serial_no', name: 'serial_no' },
+            { data: 'date', name: 'date' },
             { data: 'vibhag_name', name: 'vibhag_name' },
             { data: 'driver_name', name: 'driver_name' },
             { data: 'driver_mobile_number', name: 'driver_mobile_number' },
             { data: 'vehicle_number', name: 'vehicle_number' },
             { data: 'deliever_to', name: 'deliever_to' },
-            { data: 'date', name: 'date' },
             { data: 'check_in', name: 'check_in' },
             { data: 'check_out', name: 'check_out' },
             { data: 'action', name: 'action' },

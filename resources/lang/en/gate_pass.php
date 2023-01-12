@@ -37,7 +37,7 @@ return [
     'deliever_to' => 'Deliever To',
     'item' => 'Item',
     'qty' => 'Quantity',
-    'serial_no' => 'Reference',
+    'serial_no' => 'Reference No',
     'checkout' => 'Check Out',
     'check_in' => 'Check In',
 ];

@@ -99,6 +99,7 @@ class GatePassController extends Controller
                     $html .=  '</ul></div>';
                     return $html;
                 })
+                ->editColumn('date', '{{@format_date($date)}}')
                 ->editColumn('check_in', '{{@format_datetime($check_in)}}')
                 ->editColumn(
                     'check_out',
