@@ -15,8 +15,13 @@
 	<div class="box box-solid">
 		<div class="box-body" style="padding: 30px;">
 			<div class="row">
-
 				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group ">
+							{!! Form::label('reference_no', __('gate_pass.reference_no').':*') !!}
+							{!! Form::text('reference_no', $gatePassData->reference_no, ['class' => 'form-control','required']); !!}
+						</div>
+					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('vibhag_name', __('gate_pass.vibhag_name').':*') !!}
@@ -30,15 +35,15 @@
 							{!! Form::text('driver_name', $gatePassData->driver_name, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
+				</div>
+
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('driver_mobile_number', __('gate_pass.driver_mobile_number').':*') !!}
 							{!! Form::number('driver_mobile_number', $gatePassData->driver_mobile_number, ['class' => 'form-control','required','data-rule-max-digits' =>10, 'data-msg-max-digits'=>"Please Enter Valid Number"]); !!}
 						</div>
 					</div>
-				</div>
-
-				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('vehicle_number', __('gate_pass.vehicle_number').':*') !!}
@@ -51,22 +56,20 @@
 							{!! Form::text('deliever_to', $gatePassData->deliever_to, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
+				</div>
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
 							{!! Form::text('sign_of_gate_pass_approval', $gatePassData->sign_of_gate_pass_approval, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
-				</div>
-				<div class="row">
-
 					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('sign_of_secutiry_person', __('gate_pass.sign_of_secutiry_person').':*') !!}
-							{!! Form::text('sign_of_secutiry_person', $gatePassData->sign_of_secutiry_person, ['class' => 'form-control','required']); !!}
+							{!! Form::label('sign_of_secutiry_person', __('gate_pass.sign_of_secutiry_person').':') !!}
+							{!! Form::text('sign_of_secutiry_person', $gatePassData->sign_of_secutiry_person, ['class' => 'form-control']); !!}
 						</div>
 					</div>
-
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('date', __('messages.date') . ':*') !!}
@@ -78,7 +81,8 @@
 							</div>
 						</div>
 					</div>
-
+				</div>
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							@if($gatePassData->document)
@@ -96,9 +100,41 @@
 						</div>
 						@endif
 					</div>
-				</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('item', __('gate_pass.item') . ':') !!}
+							@foreach( $gatePassData->values as $attr)
+							@if( $loop->first )
 
-				<div class="row">
+							{!! Form::text('edit_items[' . $attr->id . ']', $attr->name, ['class' => 'form-control']); !!}
+
+							@endif
+							@endforeach
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" id="add_items" style="margin-top: 25px;">+</button>
+						</div>
+					</div>
+				</div>
+				<div id="items_data" class="box-body" style="padding-left: 14px;">
+					@foreach( $gatePassData->values as $attr)
+					@if( !$loop->first )
+					<div class="row">
+						<div class="col-sm-4" style="padding-left: 0">
+							<div class="form-group">
+								{!! Form::text('edit_items[' . $attr->id . ']', $attr->name, ['class' => 'form-control']); !!}
+							</div>
+						</div>
+						<div class="col-sm-4" style="padding-left:22px">
+							<div class="form-group"><button type="button" class="btn btn-danger delete_items">-</button></div>
+						</div>
+					</div>
+					@endif
+					@endforeach
+				</div>
+				<!-- <div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('item', __('gate_pass.item') . ':') !!}
@@ -109,8 +145,8 @@
 							{!! Form::label('qty', __('gate_pass.qty') . ':') !!}
 						</div>
 					</div>
-				</div>
-				@foreach( $gatePassData->values as $attr)
+				</div> -->
+				<!-- @foreach( $gatePassData->values as $attr)
 				@if( $loop->first )
 				<div class="row">
 
@@ -133,9 +169,9 @@
 					</div>
 				</div>
 				@endif
-				@endforeach
+				@endforeach -->
 
-				<div id="items_data" class="box-body" style="padding-left: 14px;">
+				<!-- <div id="items_data" class="box-body" style="padding-left: 14px;">
 					@foreach( $gatePassData->values as $attr)
 					@if( !$loop->first )
 					<div class="row">
@@ -155,7 +191,7 @@
 					</div>
 					@endif
 					@endforeach
-				</div>
+				</div> -->
 				<div class="col-sm-12">
 					<button type="submit" id="submit_edit_gate_pass_form" class="btn btn-primary pull-right btn-flat">@lang('messages.save')</button>
 				</div>

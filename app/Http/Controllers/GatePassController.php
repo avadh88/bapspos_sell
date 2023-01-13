@@ -140,7 +140,7 @@ class GatePassController extends Controller
         }
         try {
 
-            $gate_pass_data = $request->only(['vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no']);
+            $gate_pass_data = $request->only(['reference_no', 'vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no']);
 
             $request->validate([
                 'vibhag_name' => 'required',
@@ -149,7 +149,6 @@ class GatePassController extends Controller
                 'vehicle_number' => 'required',
                 'deliever_to' => 'required',
                 'sign_of_gate_pass_approval' => 'required',
-                'sign_of_secutiry_person' => 'required',
                 'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
             ]);
 
@@ -169,19 +168,32 @@ class GatePassController extends Controller
             $gatePass = GatePass::create($gate_pass_data);
 
             $gate_pass_data['document'] = $this->productUtil->uploadFile($request, 'document', 'documents');
-            if (!empty($request->input('items')) && (!empty($request->input('qtys')))) {
+            // SAVE FOR MULTIPLE ITEMS AND QUANTITY
+            // if (!empty($request->input('items')) && (!empty($request->input('qtys')))) {
+            //     $items = $request->input('items');
+            //     $qtys = $request->input('qtys');
+            //     $data = [];
+            //     foreach ($items as $key => $value) {
+            //         if (!empty($value)) {
+            //             $data[] = ['name' => $value, 'qty' => $qtys[$key]];
+            //         }
+            //     }
+
+            //     $gatePass->values()->createMany($data);
+            // }
+
+            // CODE FOR SAVING ONLY ITEMS.
+            if (!empty($request->input('items'))) {
                 $items = $request->input('items');
-                $qtys = $request->input('qtys');
                 $data = [];
                 foreach ($items as $key => $value) {
                     if (!empty($value)) {
-                        $data[] = ['name' => $value, 'qty' => $qtys[$key]];
+                        $data[] = ['name' => $value];
                     }
                 }
 
                 $gatePass->values()->createMany($data);
             }
-
             DB::commit();
             $lastId = $gatePass->id;
             $receipt = $this->receiptContent($lastId);
@@ -246,7 +258,7 @@ class GatePassController extends Controller
 
             $gatePassData = GatePass::findOrFail($id);
 
-            $update_data = $request->only(['vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document']);
+            $update_data = $request->only(['reference_no','vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document']);
 
             $update_data['date'] = $this->productUtil->uf_date($update_data['date'], true);
 
@@ -260,37 +272,65 @@ class GatePassController extends Controller
             }
             $gatePassData->update($update_data);
             $data = [];
-            if (!empty($request->input('edit_items')) && !empty($request->input('edit_qtys'))) {
+            // QUANTITY AND ITEMS SAVE
+            // if (!empty($request->input('edit_items')) && !empty($request->input('edit_qtys'))) {
+            //     $edit_items = $request->input('edit_items');
+            //     $edit_qtys = $request->input('edit_qtys');
+            //     foreach ($edit_items as $key => $value) {
+            //         if (!empty($value)) {
+            //             $gatePassItem = GatePassItems::find($key);
+
+            //             if ($gatePassItem->name != $value) {
+            //                 $gatePassItem->name = $value;
+            //                 $data[] = $gatePassItem;
+            //             }
+            //             if ($gatePassItem->qty != $edit_qtys[$key]) {
+            //                 $gatePassItem->qty = $edit_qtys[$key];
+            //                 $data[] = $gatePassItem;
+            //             }
+            //         }
+            //     }
+            //     $gatePassData->values()->saveMany($data);
+            // }
+
+            // if (!empty($request->input('items')) && !empty($request->input('qtys'))) {
+            //     $items = $request->input('items');
+            //     $qtys = $request->input('qtys');
+
+            //     foreach ($items as $key => $value) {
+            //         if (!empty($value)) {
+            //             $data[] = new GatePassItems(['name' => $value, 'qty' => $qtys[$key]]);
+            //         }
+            //     }
+            // }
+
+            // SAVE MULTIPLE ITEMS
+            if (!empty($request->input('edit_items'))) {
                 $edit_items = $request->input('edit_items');
-                $edit_qtys = $request->input('edit_qtys');
                 foreach ($edit_items as $key => $value) {
+                    $gatePassItem = GatePassItems::find($key);
                     if (!empty($value)) {
-                        $gatePassItem = GatePassItems::find($key);
 
                         if ($gatePassItem->name != $value) {
                             $gatePassItem->name = $value;
                             $data[] = $gatePassItem;
                         }
-                        if ($gatePassItem->qty != $edit_qtys[$key]) {
-                            $gatePassItem->qty = $edit_qtys[$key];
-                            $data[] = $gatePassItem;
-                        }
+                    } else {
+                        $gatePassItem->delete();
                     }
                 }
                 $gatePassData->values()->saveMany($data);
             }
 
-            if (!empty($request->input('items')) && !empty($request->input('qtys'))) {
+            if (!empty($request->input('items'))) {
                 $items = $request->input('items');
-                $qtys = $request->input('qtys');
-
                 foreach ($items as $key => $value) {
                     if (!empty($value)) {
-                        $data[] = new GatePassItems(['name' => $value, 'qty' => $qtys[$key]]);
+                        $data[] = new GatePassItems(['name' => $value]);
                     }
                 }
+                $gatePassData->values()->saveMany($data);
             }
-            $gatePassData->values()->saveMany($data);
 
             DB::commit();
 

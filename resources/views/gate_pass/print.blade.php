@@ -33,13 +33,13 @@
                     <tr class="bg-green">
                         <th>Sr.no.</th>
                         <th>Item Name</th>
-                        <th>Qty</th>
+                        <!-- <th>Qty</th> -->
                     </tr>
                     @foreach( $gatePassData->values as $attr)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{!! $attr->name !!}</td>
-                        <td>{!! $attr->qty !!}</td>
+                        <!-- <td>{!! $attr->qty !!}</td> -->
                     </tr>
                     @endforeach
                 </table>
@@ -58,10 +58,12 @@
     <div class="col-sm-4 invoice-col">
     </div>
 
+    @if($gatePassData->sign_of_secutiry_person)
     <div class="col-sm-4 invoice-col">
         <p class="no-shadow bg-gray">
             {{ $gatePassData->sign_of_secutiry_person }}
         </p>
         <strong>@lang('gate_pass.sign_of_secutiry_person'):</strong><br>
     </div>
+    @endif
 </div>

@@ -40,4 +40,5 @@ return [
     'serial_no' => 'Reference No',
     'checkout' => 'Check Out',
     'check_in' => 'Check In',
+    'reference_no' => 'Serial No'
 ];
