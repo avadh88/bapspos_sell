@@ -19,7 +19,7 @@ return [
     'driver_name' => 'Driver Name',
     'driver_mobile_number' => 'Driver Mobile Number',
     'vehicle_number' => 'Vehicle Number',
-    'deliever_to' => 'Deliver to',
+    'deliver_to' => 'Deliver to',
     'sign_of_gate_pass_approval' => 'Sign Of Pass Approval',
     'sign_of_secutiry_person' => 'Sign Of security Person',
     'attach_document' => 'Attach Document',

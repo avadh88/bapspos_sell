@@ -16,7 +16,7 @@
                 <p><b>@lang('gate_pass.driver_name'):</b> {{ $gatePassData->driver_name }}</p>
                 <p><b>@lang('gate_pass.vehicle_number'):</b> {{ $gatePassData->vehicle_number }}</p>
                 <p><b>@lang('gate_pass.driver_number'):</b> {{ $gatePassData->driver_mobile_number }}</p>
-                <p><b>@lang('gate_pass.deliever_to'):</b> {{ $gatePassData->deliever_to }}</p>
+                <p><b>@lang('gate_pass.deliver_to'):</b> {{ $gatePassData->deliever_to }}</p>
             </span>
         </p>
     </div>
@@ -44,9 +44,8 @@
     </div>
 </div>
 <p>--------------------------------------------</p>
-<div class="row">
+<div class="row" style="margin-bottom:50px;">
     <div class="col-xs-12 text-center">
-        Jay Swaminarayan
         <span class="pull-left text-left" style="margin-top: 5px;">
             <p><b>@lang('gate_pass.sign_of_gate_pass_approval'):</b> {{ $gatePassData->sign_of_gate_pass_approval }}</p>
             @if($gatePassData->sign_of_secutiry_person)
