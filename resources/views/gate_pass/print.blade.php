@@ -56,6 +56,11 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <p>--------------------------------------------</p>
+    </div>
+</div>
 <!-- <div class="row">
     <div class="col-xs-12 text-center">
         <p style="width: 100% !important" class="word-wrap">
