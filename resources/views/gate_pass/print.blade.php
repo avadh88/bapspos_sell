@@ -44,7 +44,7 @@
     </div>
 </div>
 <p>--------------------------------------------</p>
-<div class="row" style="">
+<div class="row" style="margin-bottom:30px; padding-bottom:30px;">
     <div class="col-xs-12 text-center">
         <span class="pull-left text-left" style="margin-top: 5px;">
             <p><b>@lang('gate_pass.sign_of_gate_pass_approval'):</b> {{ $gatePassData->sign_of_gate_pass_approval }}</p>
