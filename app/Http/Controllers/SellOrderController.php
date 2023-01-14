@@ -523,7 +523,7 @@ class SellOrderController extends Controller
             )->get()->first();
             
             $sellorder->sellorder_lines[$key]->quotas = $rationingQuotas->quotas;
-            $sellorder->sellorder_lines[$key]->qty = $sellOrderQuantity->qty - $sellorder->sellorder_lines[$key]->quantity; 
+            $sellorder->sellorder_lines[$key]->qty = $rationingQuotas->quotas - $sellOrderQuantity->qty - $sellorder->sellorder_lines[$key]->quantity; 
         }
 
         $taxes = TaxRate::where('business_id', $business_id)
