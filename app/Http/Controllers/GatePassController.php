@@ -140,7 +140,7 @@ class GatePassController extends Controller
         }
         try {
 
-            $gate_pass_data = $request->only(['reference_no', 'vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no']);
+            $gate_pass_data = $request->only(['reference_no', 'vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no','getpass_type']);
 
             $request->validate([
                 'vibhag_name' => 'required',
@@ -165,6 +165,7 @@ class GatePassController extends Controller
             if (empty($gate_pass_data['serial_no'])) {
                 $gate_pass_data['serial_no'] = $this->productUtil->generateReferenceNumber('gate_pass_prefix', $serial_no_count);
             }
+            $gate_pass_data['created_by'] =request()->session()->get('user.id');
             $gatePass = GatePass::create($gate_pass_data);
 
             $gate_pass_data['document'] = $this->productUtil->uploadFile($request, 'document', 'documents');
@@ -258,7 +259,7 @@ class GatePassController extends Controller
 
             $gatePassData = GatePass::findOrFail($id);
 
-            $update_data = $request->only(['reference_no','vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document']);
+            $update_data = $request->only(['reference_no','vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document','getpass_type','serial_no']);
 
             $update_data['date'] = $this->productUtil->uf_date($update_data['date'], true);
 

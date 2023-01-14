@@ -18,6 +18,12 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group ">
+							{!! Form::label('getpass_type', __('gate_pass.type').':*') !!}
+							{!! Form::select('getpass_type', ['' => __('Please select'),'1' => __('Mandir'), '0' => __('Haribhakt')],$gatePassData->getpass_type, ['class' => 'form-control','required']) !!}
+						</div>
+					</div>
+					<div class="col-sm-4 <?= $class= $gatePassData->getpass_type == 0 ? 'hide':''; ?>" id="refrence_no_div">
+						<div class="form-group ">
 							{!! Form::label('reference_no', __('gate_pass.reference_no').':*') !!}
 							{!! Form::text('reference_no', $gatePassData->reference_no, ['class' => 'form-control','required']); !!}
 						</div>
@@ -29,15 +35,16 @@
 						</div>
 					</div>
 
+					
+				</div>
+
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('driver_name', __('gate_pass.driver_name').':*') !!}
 							{!! Form::text('driver_name', $gatePassData->driver_name, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
-				</div>
-
-				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('driver_mobile_number', __('gate_pass.driver_mobile_number').':*') !!}
@@ -50,14 +57,15 @@
 							{!! Form::text('vehicle_number', $gatePassData->vehicle_number, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
+					
+				</div>
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('deliever_to', __('gate_pass.deliever_to').':*') !!}
 							{!! Form::text('deliever_to', $gatePassData->deliever_to, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
@@ -70,6 +78,9 @@
 							{!! Form::text('sign_of_secutiry_person', $gatePassData->sign_of_secutiry_person, ['class' => 'form-control']); !!}
 						</div>
 					</div>
+					
+				</div>
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('date', __('messages.date') . ':*') !!}
@@ -81,8 +92,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							@if($gatePassData->document)
@@ -100,6 +109,8 @@
 						</div>
 						@endif
 					</div>
+				</div>
+				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('item', __('gate_pass.item') . ':') !!}
@@ -234,4 +245,17 @@
 @endsection
 @section('javascript')
 <script src="{{ asset('js/gate_pass.js?v=' . $asset_v) }}"></script>
+<script>
+$('#getpass_type').on('change', function() {
+	if(this.value==1)
+	{
+		$("#refrence_no_div").removeClass('hide');
+	}
+	else
+	{
+		$("#reference_no").val("");
+		$("#refrence_no_div").addClass('hide');
+	}
+});
+</script>
 @endsection

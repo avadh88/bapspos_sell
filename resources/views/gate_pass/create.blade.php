@@ -15,6 +15,7 @@
 	<div class="box box-solid">
 		<div class="box-body" style="padding: 30px;">
 			<div class="row">
+
 				<div class="col-sm-3 hide">
 					<div class="form-group ">
 						{!! Form::label('serial_no', __('gate_pass.serial_no').':') !!}
@@ -24,48 +25,57 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group ">
+							{!! Form::label('getpass_type', __('gate_pass.type').':*') !!}
+							{!! Form::select('getpass_type', ['' => __('Please select'),'1' => __('Mandir'), '0' => __('Haribhakt')], '', ['class' => 'form-control']) !!}
+							<label id="getpass-type-error" class="error" for=""></label>
+						</div>
+					</div>
+					<div class="col-sm-4 hide" id="refrence_no_div">
+						<div class="form-group ">
 							{!! Form::label('reference_no', __('gate_pass.reference_no').':*') !!}
 							{!! Form::text('reference_no', null, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('vibhag_name', __('gate_pass.vibhag_name').':') !!}
+							{!! Form::label('vibhag_name', __('gate_pass.vibhag_name').':*') !!}
 							{!! Form::text('vibhag_name', null, ['class' => 'form-control','required', 'id' => 'vibhag_name']); !!}
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('driver_name', __('gate_pass.driver_name').':') !!}
-							{!! Form::text('driver_name', null, ['class' => 'form-control','required']); !!}
-						</div>
-					</div>
+					
 				</div>
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('driver_mobile_number', __('gate_pass.driver_mobile_number').':') !!}
+							{!! Form::label('driver_name', __('gate_pass.driver_name').':*') !!}
+							{!! Form::text('driver_name', null, ['class' => 'form-control','required']); !!}
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('driver_mobile_number', __('gate_pass.driver_mobile_number').':*') !!}
 
 							{!! Form::number('driver_mobile_number', null, ['class' => 'form-control','required','data-rule-max-digits' =>10, 'data-msg-max-digits'=>"Please Enter Valid Number"]); !!}
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('vehicle_number', __('gate_pass.vehicle_number').':') !!}
+							{!! Form::label('vehicle_number', __('gate_pass.vehicle_number').':*') !!}
 							{!! Form::text('vehicle_number', null, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('deliever_to', __('gate_pass.deliever_to').':') !!}
-							{!! Form::text('deliever_to', null, ['class' => 'form-control','required']); !!}
-						</div>
-					</div>
+					
 				</div>
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':') !!}
+							{!! Form::label('deliever_to', __('gate_pass.deliever_to').':*') !!}
+							{!! Form::text('deliever_to', null, ['class' => 'form-control','required']); !!}
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
 							{!! Form::text('sign_of_gate_pass_approval', null, ['class' => 'form-control','required']); !!}
 						</div>
 					</div>
@@ -86,8 +96,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('document', __('gate_pass.attach_document') . ':') !!}
@@ -95,6 +103,9 @@
 							<p class="help-block">@lang('gate_pass.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])</p>
 						</div>
 					</div>
+				</div>
+				<div class="row">
+					
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('item', __('gate_pass.item') . ':') !!}
@@ -151,4 +162,17 @@
 @endsection
 @section('javascript')
 <script src="{{ asset('js/gate_pass.js?v=' . $asset_v) }}"></script>
+<script>
+$('#getpass_type').on('change', function() {
+	if(this.value==1)
+	{
+		$("#refrence_no_div").removeClass('hide');
+	}
+	else
+	{
+		$("#reference_no").val("");
+		$("#refrence_no_div").addClass('hide');
+	}
+});
+</script>
 @endsection

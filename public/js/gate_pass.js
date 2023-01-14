@@ -104,8 +104,16 @@ $(document).ready(function () {
     });
     $(document).on('click', 'button#submit_gate_pass_form', function (e) {
         e.preventDefault();
+        let getpass_type = $("#getpass_type").val();
+        $("#getpass-type-error").html('');
         $('form#add_gate_pass_form').validate({
         });
+        if(getpass_type == "")
+        {
+            $("#getpass-type-error").html('This field is required.')
+            return false;
+        }
+        
         if ($('form#add_gate_pass_form').valid()) {
             //     $('form#add_gate_pass_form').submit();
             var data = $("#add_gate_pass_form").serialize();
@@ -142,8 +150,15 @@ $(document).ready(function () {
 
     $(document).on('click', 'button#submit_checkout_form', function (e) {
         e.preventDefault()
+        let getpass_type = $("#getpass_type").val();
+        $("#getpass-type-error").html('');
         $('form#checkout_gate_pass_form').validate({
         });
+        if(getpass_type == "")
+        {
+            $("#getpass-type-error").html('This field is required.')
+            return false;
+        }
         if ($('form#checkout_gate_pass_form').valid()) {
             // let data = $("#checkout_gate_pass_form").serialize();
             let serial_no = $("#serial_no").val();
