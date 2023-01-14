@@ -337,7 +337,8 @@ class GenralstoreReportController extends Controller
                     // // if (!empty($request->input('ir_customer_id'))) 
                     // // {
                         // $products->whereIn('trans.contact_id', $contactIds);
-                        $products->where('trans.type','purchase')->where('trans.status','received');
+                        $products->where('trans.type','purchase');
+                        // ->where('trans.status','received');
                     // // }
                     if (!empty($request->input('date_range'))) {
                         $date_range = $request->input('date_range');
