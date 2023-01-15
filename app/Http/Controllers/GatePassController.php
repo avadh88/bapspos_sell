@@ -140,7 +140,7 @@ class GatePassController extends Controller
         }
         try {
 
-            $gate_pass_data = $request->only(['reference_no', 'vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no','getpass_type']);
+            $gate_pass_data = $request->only(['reference_no', 'vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document', 'serial_no','getpass_type','additional_notes']);
 
             $request->validate([
                 'vibhag_name' => 'required',
@@ -259,7 +259,7 @@ class GatePassController extends Controller
 
             $gatePassData = GatePass::findOrFail($id);
 
-            $update_data = $request->only(['reference_no','vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document','getpass_type','serial_no']);
+            $update_data = $request->only(['reference_no','vibhag_name', 'driver_name', 'driver_mobile_number', 'vehicle_number', 'deliever_to', 'sign_of_gate_pass_approval', 'sign_of_secutiry_person', 'date', 'document','getpass_type','serial_no','additional_notes']);
 
             $update_data['date'] = $this->productUtil->uf_date($update_data['date'], true);
 
@@ -508,6 +508,7 @@ class GatePassController extends Controller
             DB::beginTransaction();
 
             $input['check_out'] = \Carbon::now()->toDateTimeString();
+            $input['gate_pass_approval_id'] = request()->session()->get('user.id');
             $input['status'] = 1;
 
             $gatePassData->update($input);

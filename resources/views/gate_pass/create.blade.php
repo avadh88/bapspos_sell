@@ -74,9 +74,16 @@
 						</div>
 					</div>
 					<div class="col-sm-4">
+                        <div class="form-group">
+						{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
+                                
+							{!! Form::select('sign_of_gate_pass_approval',['Pu Kaivalyamuni swami'=>'Pu Kaivalyamuni swami','Brijesh Bhai'=>'Brijesh Bhai'],null,['class' => 'form-control','required']); !!}
+                        </div>
+                    </div>
+					<div class="col-sm-4">
 						<div class="form-group">
-							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
-							{!! Form::text('sign_of_gate_pass_approval', null, ['class' => 'form-control','required']); !!}
+							
+							
 						</div>
 					</div>
 					<div class="col-sm-4">
@@ -101,6 +108,13 @@
 							{!! Form::label('document', __('gate_pass.attach_document') . ':') !!}
 							{!! Form::file('document', ['id' => 'upload_document']); !!}
 							<p class="help-block">@lang('gate_pass.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])</p>
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('additional_notes', __('Additional Notes') . ':') !!}
+							{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'placeholder' => __( 'brand.note' ), 'rows' => 4]); !!}
 						</div>
 					</div>
 				</div>

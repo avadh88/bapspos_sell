@@ -67,11 +67,12 @@
 						</div>
 					</div>
 					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
-							{!! Form::text('sign_of_gate_pass_approval', $gatePassData->sign_of_gate_pass_approval, ['class' => 'form-control','required']); !!}
-						</div>
-					</div>
+                        <div class="form-group">
+						{!! Form::label('sign_of_gate_pass_approval', __('gate_pass.sign_of_gate_pass_approval').':*') !!}
+                                
+							{!! Form::select('sign_of_gate_pass_approval',['Pu Kaivalyamuni swami'=>'Pu Kaivalyamuni swami','Brijesh Bhai'=>'Brijesh Bhai'],$gatePassData->sign_of_gate_pass_approval,['class' => 'form-control','required']); !!}
+                        </div>
+                    </div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							{!! Form::label('sign_of_secutiry_person', __('gate_pass.sign_of_secutiry_person').':') !!}
@@ -109,6 +110,13 @@
 						</div>
 						@endif
 					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('additional_notes', __('Additional Notes') . ':') !!}
+							{!! Form::textarea('additional_notes', $gatePassData->additional_notes, ['class' => 'form-control', 'placeholder' => __( 'brand.note' ), 'rows' => 4]); !!}
+						</div>
+					</div>
+					
 				</div>
 				<div class="row">
 					<div class="col-sm-4">
