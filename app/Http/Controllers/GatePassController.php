@@ -69,8 +69,8 @@ class GatePassController extends Controller
 
             if (request()->has('type')) {
                 $type = request()->get('type');
-                if (!empty($type)) {
-                    $query->where('type', $type);
+                if ($type != '') {
+                    $query->where('gatepass_type', $type);
                    
                 }
             }
