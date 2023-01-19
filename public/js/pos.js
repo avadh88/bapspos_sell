@@ -748,9 +748,9 @@ $(document).ready(function() {
                 // }
             }
 
-            if ($('#customer_id').val()==6 && $("#damage_by_customer_id").val()=='') {
-                toastr.error("please select damage customer");
-            }
+            // if ($('#customer_id').val()==6 && $("#damage_by_customer_id").val()=='') {
+            //     toastr.error("please select damage customer");
+            // }
 
             if (cnf) {
                 $('div.pos-processing').show();
@@ -1970,14 +1970,14 @@ function add_product_pos()
     {
         var damage_by_customer_id = document.getElementById('damage_by_customer_id').value;
         var customer_id = document.getElementById('customer_id').value;
-        if(customer_id==61)
-        {
-            if(damage_by_customer_id=='')
-            {
-                toastr.error("Please select damage customer");
-                return false;
-            }
-        }
+        // if(customer_id==61)
+        // {
+        //     if(damage_by_customer_id=='')
+        //     {
+        //         toastr.error("Please select damage customer");
+        //         return false;
+        //     }
+        // }
     }
 
     if(document.getElementById('return_seva_by_customer_id'))
@@ -1985,14 +1985,14 @@ function add_product_pos()
         var return_seva_by_customer_id = document.getElementById('return_seva_by_customer_id').value;
         var customer_id = document.getElementById('customer_id').value;
 
-        if(customer_id==97)
-        {
-            if(return_seva_by_customer_id=='')
-            {
-                toastr.error("please select seva return supplier");
-                return false;
-            }
-        }
+        // if(customer_id==97)
+        // {
+        //     if(return_seva_by_customer_id=='')
+        //     {
+        //         toastr.error("please select seva return supplier");
+        //         return false;
+        //     }
+        // }
     }
     
     if(product_qty=='')
