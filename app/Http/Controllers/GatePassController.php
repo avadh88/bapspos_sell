@@ -67,6 +67,14 @@ class GatePassController extends Controller
                 }
             }
 
+            if (request()->has('type')) {
+                $type = request()->get('type');
+                if (!empty($type)) {
+                    $query->where('type', $type);
+                   
+                }
+            }
+
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;

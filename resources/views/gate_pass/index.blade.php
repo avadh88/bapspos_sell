@@ -25,6 +25,13 @@
             {!! Form::text('gate_pass_filter_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            {!! Form::label('type', __('gate_pass.type') . ':') !!}
+            {!! Form::select('type',[''=>'All','1'=>'Mandir','0'=>'Haribhakta'],'',['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control']); !!}
+        </div>
+    </div>
     @endcomponent
 
     @component('components.widget', ['class' => 'box-primary', 'title' => __('gate_pass.gate_pass')])

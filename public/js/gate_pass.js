@@ -26,6 +26,7 @@ $(document).ready(function () {
                 }
                 d.start_date = start;
                 d.end_date = end;
+                d.type = $('#type').val();
             },
         },
         columnDefs: [
@@ -193,6 +194,12 @@ $(document).ready(function () {
         if (key == 13 || serialNo > 3 || serialNo == 0) {
             gate_pass_table.ajax.reload();
         }
+    });
+
+    $(
+        '#type'
+    ).change(function() {
+        gate_pass_table.ajax.reload();
     });
 
 });
