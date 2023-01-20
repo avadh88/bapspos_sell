@@ -1,3 +1,10 @@
+@php
+	$show_price='';
+	if(!auth()->user()->show_price)
+	{
+		$show_price= 'hide';
+	}
+@endphp
 <div class="modal-header">
     <button type="button" class="close no-print" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="modalTitle"> @lang('sellorder.sellorder_details') (<b>@lang('sellorder.ref_no'):</b> #{{ $sellorder->ref_no }})
@@ -88,7 +95,7 @@
               <th>#</th>
               <th>@lang('product.product_name')</th>
               <th>@lang('sellorder.sellorder_quantity')</th>
-              <th>@lang( 'lang_v1.unit_cost_before_discount' )</th>
+              <th class="{{$show_price}}">@lang( 'lang_v1.unit_cost_before_discount' )</th>
               <!-- <th>@lang( 'lang_v1.discount_percent' )</th> -->
               <!-- <th class="no-print">@lang('sellorder.unit_cost_before_tax')</th> -->
               <!-- <th class="no-print">@lang('sellorder.subtotal_before_tax')</th> -->
@@ -102,7 +109,7 @@
                 <th>@lang('product.mfg_date')</th>
                 <th>@lang('product.exp_date')</th>
               @endif
-              <th>@lang('sale.subtotal')</th>
+              <th class="{{$show_price}}">@lang('sale.subtotal')</th>
               <th>@lang( 'sale.sale_order_date' )</th>
             </tr>
           </thead>
@@ -120,7 +127,7 @@
                  @endif
               </td>
               <td><span class="display_currency" data-is_quantity="true" data-currency_symbol="false">{{ $sellorder_line->quantity }}</span> @if(!empty($sellorder_line->sub_unit)) {{$sellorder_line->sub_unit->short_name}} @else {{$sellorder_line->product->unit->short_name}} @endif</td>
-              <td><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->pp_without_discount}}</span></td>
+              <td class="{{$show_price}}"><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->pp_without_discount}}</span></td>
               <!-- <td><span class="display_currency">{{ $sellorder_line->discount_percent}}</span> %</td> -->
               <!-- <td class="no-print"><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->sellorder_price }}</span></td> -->
               <!-- <td class="no-print"><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->quantity * $sellorder_line->sellorder_price }}</span></td> -->
@@ -159,7 +166,7 @@
               </td>
               @endif
               
-              <td><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->pp_without_discount * $sellorder_line->quantity }}</span></td>
+              <td class="{{$show_price}}"><span class="display_currency" data-currency_symbol="true">{{ $sellorder_line->pp_without_discount * $sellorder_line->quantity }}</span></td>
               <td>
                 @if( !empty($sellorder_line->sell_order_date) )
                   @if(!empty($sellorder_line->sell_order_date))
@@ -179,7 +186,7 @@
     </div>
   </div>
   <br>
-  <div class="row">
+  <div class="row {{$show_price}}">
     <div class="col-sm-12 col-xs-12">
       <h4>{{ __('sale.payment_info') }}:</h4>
     </div>

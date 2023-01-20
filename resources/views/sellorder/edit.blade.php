@@ -2,7 +2,13 @@
 @section('title', __('sellorder.edit_sellorder'))
 
 @section('content')
-
+@php
+  $show_price='';
+  if(!auth()->user()->show_price)
+  {
+    $show_price= 'hide';
+  }
+@endphp
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@lang('sellorder.edit_sellorder') <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sellorder.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h1>
@@ -16,6 +22,7 @@
   <input type="hidden" id="p_symbol" value="{{$currency_details->symbol}}">
   <input type="hidden" id="p_thousand" value="{{$currency_details->thousand_separator}}">
   <input type="hidden" id="p_decimal" value="{{$currency_details->decimal_separator}}">
+	<input type="hidden" id="show_price" value="{{$show_price}}" name="show_price" />
 
   @include('layouts.partials.error')
 
@@ -206,7 +213,7 @@
                       <input type="hidden" id="st_before_tax_input" value=0>
                     </td>
                   </tr>
-                  <tr>
+                  <tr class="{{$show_price}}">
                     <th class="col-md-7 text-right">@lang( 'sellorder.net_total_amount' ):</th>
                     <td class="col-md-5 text-left">
                       <span id="total_subtotal" class="display_currency">{{$sellorder->total_before_tax/$sellorder->exchange_rate}}</span>
@@ -225,7 +232,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <table class="table">
-                  <tr>
+                  <tr class="{{$show_price}}">
                     <th class="col-md-10 text-right">@lang('sellorder.sellorder_total'):</th>
                     <td class="col-md-2 text-left">
                       {!! Form::hidden('final_total', $sellorder->final_total , ['id' => 'grand_total_hidden']); !!}

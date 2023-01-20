@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    let show_price = document.getElementById('show_price').value;
     if ($('input#iraqi_selling_price_adjustment').length > 0) {
         iraqi_selling_price_adjustment = true;
     } else {
@@ -489,6 +490,8 @@ $(document).ready(function () {
     });
 
     //Purchase table
+    if(show_price==1)
+    {
     sellorder_table = $('#sellorder_table').DataTable({
         processing: true,
         serverSide: false,
@@ -576,6 +579,88 @@ $(document).ready(function () {
             sellorder_table.ajax.reload();
         }
     );
+    }else{
+        sellorder_table_without_price = $('#sellorder_table_without_price').DataTable({
+            processing: true,
+            serverSide: false,
+            aaSorting: [[0, 'desc']],
+            ajax: {
+                url: '/sellorder',
+                data: function (d) {
+                    if ($('#sellorder_list_filter_location_id').length) {
+                        d.location_id = $('#sellorder_list_filter_location_id').val();
+                    }
+                    if ($('#sellorder_list_filter_customer_id').length) {
+                        d.supplier_id = $('#sellorder_list_filter_customer_id').val();
+                    }
+                    if ($('#sellorder_list_filter_payment_status').length) {
+                        d.payment_status = $('#sellorder_list_filter_payment_status').val();
+                    }
+                    if ($('#sellorder_list_filter_status').length) {
+                        d.status = $('#sellorder_list_filter_status').val();
+                    }
+    
+                    var start = '';
+                    var end = '';
+                    if ($('#sellorder_list_filter_date_range').val()) {
+                        start = $('input#sellorder_list_filter_date_range')
+                            .data('daterangepicker')
+                            .startDate.format('YYYY-MM-DD');
+                        end = $('input#sellorder_list_filter_date_range')
+                            .data('daterangepicker')
+                            .endDate.format('YYYY-MM-DD');
+                    }
+                    d.start_date = start;
+                    d.end_date = end;
+                },
+            },
+            columnDefs: [
+                {
+                    targets: [6, 7],
+                    orderable: false,
+                    searchable: false,
+                },
+            ],
+            columns: [
+                { data: 'transaction_date', name: 'transaction_date' },
+                { data: 'ref_no', name: 'ref_no' },
+                { data: 'location_name', name: 'BS.name' },
+                { data: 'name', name: 'contacts.name' },
+                { data: 'status', name: 'status' },
+                { data: 'payment_status', name: 'payment_status' },
+                { data: 'additional_notes', name: 'additional_notes' },
+                { data: 'action', name: 'action' },
+            ],
+            fnDrawCallback: function (oSettings) {
+    
+                var total_sellorder_return_due = sum_table_col($('#sellorder_table_without_price'), 'sellorder_return');
+                $('#footer_total_sellorder_return_due').text(total_sellorder_return_due);
+    
+                $('#footer_status_count').html(__sum_status_html($('#sellorder_table_without_price'), 'status-label'));
+    
+                $('#footer_payment_status_count').html(
+                    __sum_status_html($('#sellorder_table_without_price'), 'payment-status-label')
+                );
+    
+                __currency_convert_recursively($('#sellorder_table_without_price'));
+            },
+            createdRow: function (row, data, dataIndex) {
+                $(row)
+                    .find('td:eq(5)')
+                    .attr('class', 'clickable_td');
+            },
+        });
+    
+        $(document).on(
+            'change',
+            '#sellorder_list_filter_location_id, \
+                        #sellorder_list_filter_customer_id, #sellorder_list_filter_payment_status,\
+                         #sellorder_list_filter_status',
+            function () {
+                sellorder_table_without_price.ajax.reload();
+            }
+        );
+    }
 
     update_table_sr_number();
 
@@ -663,6 +748,33 @@ $(document).ready(function () {
                         if (result.success == true) {
                             toastr.success(result.msg);
                             sellorder_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $('table#sellorder_table_without_price tbody').on('click', 'a.delete-sellorder', function (e) {
+        e.preventDefault();
+        swal({
+            title: LANG.sure,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(willDelete => {
+            if (willDelete) {
+                var href = $(this).attr('href');
+                $.ajax({
+                    method: 'DELETE',
+                    url: href,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.success == true) {
+                            toastr.success(result.msg);
+                            sellorder_table_without_price.ajax.reload();
                         } else {
                             toastr.error(result.msg);
                         }

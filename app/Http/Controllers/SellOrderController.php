@@ -903,7 +903,11 @@ class SellOrderController extends Controller
             if ($request->session()->get('business.enable_inline_tax') == 1) {
                 $hide_tax = '';
             }
-
+            $show_price = 'hide';
+            if(auth()->user()->show_price)
+			{
+				$show_price= '';
+			}
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
 
             if (!empty($product_id)) {
@@ -947,6 +951,7 @@ class SellOrderController extends Controller
                         'taxes',
                         'currency_details',
                         'hide_tax',
+                        'show_price',
                         'sub_units',
                         'product_qty',
                         'sellorder_date',

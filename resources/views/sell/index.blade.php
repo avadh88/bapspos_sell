@@ -2,7 +2,13 @@
 @section('title', __( 'lang_v1.all_sales'))
 
 @section('content')
-
+@php
+    $show_price=1;
+    if(!auth()->user()->show_price)
+    {
+        $show_price=0;
+    }
+@endphp
 <!-- Content Header (Page header) -->
 <section class="content-header no-print">
     <h1>@lang( 'sale.sells')
@@ -38,6 +44,8 @@
         @endcan
         @can('direct_sell.access')
             <div class="table-responsive">
+            <input type="hidden" id="show_price" value="{{$show_price}}" name="show_price" />
+            @if($show_price)
                 <table class="table table-bordered table-striped ajax_view" id="sell_table">
                     <thead>
                         <tr>
@@ -63,6 +71,21 @@
                         </tr>
                     </tfoot>
                 </table>
+                @else
+                <table class="table table-bordered table-striped ajax_view" id="sell_table_without_price">
+                        <thead>
+                            <tr>
+                                <th>@lang('messages.date')</th>
+                                <th>@lang('sale.invoice_no')</th>
+                                <th>@lang('sale.customer_name')</th>
+                                <th>@lang('sale.location')</th>
+                                <th>@lang('sale.payment_status')</th>
+                                <th>@lang('messages.action')</th>
+                            </tr>
+                        </thead>
+                        
+                    </table>
+                @endif
             </div>
         @endcan
     @endcomponent
@@ -85,6 +108,9 @@
 @section('javascript')
 <script type="text/javascript">
 $(document).ready( function(){
+    let show_price = document.getElementById('show_price').value;
+    if(show_price==1)
+    {
     //Date range as a button
     $('#sell_list_filter_date_range').daterangepicker(
         dateRangeSettings,
@@ -162,6 +188,63 @@ $(document).ready( function(){
     $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status,#created_by',  function() {
         sell_table.ajax.reload();
     });
+}
+    else
+    {
+        $('#sell_list_filter_date_range').daterangepicker(
+            dateRangeSettings,
+            function (start, end) {
+                $('#sell_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                sell_table_without_price.ajax.reload();
+            }
+        );
+        $('#sell_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+            $('#sell_list_filter_date_range').val('');
+            sell_table_without_price.ajax.reload();
+        });
+        
+        sell_table_without_price = $('#sell_table_without_price').DataTable({
+            processing: true,
+            serverSide: true,
+            aaSorting: [[0, 'desc']],
+            "ajax": {
+                "url": "/sells",
+                "data": function ( d ) {
+                    if($('#sell_list_filter_date_range').val()) {
+                        var start = $('#sell_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+                        var end = $('#sell_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                        d.start_date = start;
+                        d.end_date = end;
+                    }
+                    d.is_direct_sale = 0;
+
+                    d.location_id = $('#sell_list_filter_location_id').val();
+                    d.customer_id = $('#sell_list_filter_customer_id').val();
+                    d.payment_status = $('#sell_list_filter_payment_status').val();
+                    d.created_by     = $("#created_by").val();
+                }
+            },
+            columnDefs: [ {
+                "targets": 4,
+                "orderable": false,
+                "searchable": false
+            } ],
+            columns: [
+                { data: 'transaction_date', name: 'transaction_date'  },
+                { data: 'invoice_no', name: 'invoice_no'},
+                { data: 'name', name: 'contacts.name'},
+                { data: 'business_location', name: 'bl.name'},
+                { data: 'payment_status', name: 'payment_status'},
+                { data: 'action', name: 'action'}
+            ],
+            createdRow: function( row, data, dataIndex ) {
+            }
+        });
+
+        $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status,#created_by',  function() {
+            sell_table_without_price.ajax.reload();
+        });
+    }
     @if($is_woocommerce)
         $('#synced_from_woocommerce').on('ifChanged', function(event){
             sell_table.ajax.reload();

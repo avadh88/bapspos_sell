@@ -9,8 +9,9 @@
                 <th>@lang('Delivered')</th>
                 <!-- <th>@lang('report.pending')</th> -->
                 <th>@lang('Outstanding')</th>
-                @if(!$departmentUser && $show_price==1)
                 <th>@lang('report.current_stock')</th>
+                @if(!$departmentUser && $show_price==1)
+                <!-- <th>@lang('report.current_stock')</th> -->
                 <!-- <th>@lang('Is Purchasable')</th> -->
                 <!-- <th>@lang('Remaining Purchase')</th> -->
                 <th>@lang('report.price')</th>
@@ -26,8 +27,9 @@
                 <td></td>
                 <!-- <td id="footer_total_quantity_pending" ></td> -->
                 <td id="footer_total_quantity_outstanding" ></td>
-                @if(!$departmentUser && $show_price==1)
                 <td id="footer_total_quantity_current_stock"></td>
+                @if(!$departmentUser && $show_price==1)
+                <!-- <td id="footer_total_quantity_current_stock"></td> -->
                 <!-- <td></td>
                 <td></td> -->
                 <td></td>

@@ -53,7 +53,7 @@
             @endif
         </td>
         
-        <td>
+        <td class="{{$show_price}}">
             {!! Form::text('sellorder[' . $row_count . '][purchase_price]',
             number_format($variation->default_purchase_price, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm sellorder_unit_cost input_number', 'required','readonly']); !!}
         </td>
@@ -89,7 +89,7 @@
             {!! Form::text('sellorder[' . $row_count . '][sellorder_price_inc_tax]', $dpp_inc_tax, ['class' => 'form-control input-sm sellorder_unit_cost_after_tax input_number', 'required']); !!}
         </td>
         
-        <td>
+        <td class="{{$show_price}}">
             <span class="row_subtotal_after_tax display_currency">0</span>
             <input type="hidden" class="row_subtotal_after_tax_hidden" value=0>
         </td>

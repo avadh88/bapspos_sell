@@ -14,13 +14,13 @@
                 <th>#</th>
                 <th>@lang( 'product.product_name' )</th>
                 <th>@lang( 'sellorder.sellorder_quantity' )</th>
-                <th>@lang( 'lang_v1.unit_cost_before_discount' )</th>
+                <th class="{{$show_price}}">@lang( 'lang_v1.unit_cost_before_discount' )</th>
                 <!-- <th>@lang( 'lang_v1.discount_percent' )</th>
                 <th>@lang( 'sellorder.unit_cost_before_tax' )</th> -->
                 <th class="{{$hide_tax}}">@lang( 'sellorder.subtotal_before_tax' )</th>
                 <th class="{{$hide_tax}}">@lang( 'sellorder.product_tax' )</th>
                 <th class="{{$hide_tax}}">@lang( 'sellorder.net_cost' )</th>
-                <th>@lang( 'sellorder.line_total' )</th>
+                <th class="{{$show_price}}">@lang( 'sellorder.line_total' )</th>
                 <th>@lang( 'sale.sale_order_date' )</th>
                 <th class="@if(!session('business.enable_editing_product_from_sellorder')) hide @endif">
                     @lang( 'lang_v1.profit_margin' )
@@ -108,7 +108,7 @@
             <!-- <td>
                 {!! Form::text('sellorder[' . $loop->index . '][discount_percent]', number_format($sellorder_line->discount_percent, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm inline_discounts input_number', 'required']); !!} <b>%</b>
             </td> -->
-            <td>
+            <td class="{{$show_price}}">
                 {!! Form::text('sellorder[' . $loop->index . '][purchase_price]', 
                 number_format($sellorder_line->purchase_price/$sellorder->exchange_rate, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm sellorder_unit_cost input_number', 'required','readonly']); !!}
             </td>
@@ -137,7 +137,7 @@
             <td class="{{$hide_tax}}">
                 {!! Form::text('sellorder[' . $loop->index . '][sellorder_price_inc_tax]', number_format($sellorder_line->sellorder_price_inc_tax/$sellorder->exchange_rate, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm sellorder_unit_cost_after_tax input_number', 'required']); !!}
             </td>
-            <td>
+            <td class="{{$show_price}}">
                 <span class="row_subtotal_after_tax">
                 {{number_format($sellorder_line->purchase_price_inc_tax * $sellorder_line->quantity/$sellorder->exchange_rate, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator)}}
                 </span>

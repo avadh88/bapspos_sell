@@ -2,7 +2,13 @@
 @section('title', __('sellorder.add_sell_order'))
 
 @section('content')
-
+@php
+	$show_price='';
+	if(!auth()->user()->show_price)
+	{
+		$show_price= 'hide';
+	}
+@endphp
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@lang('sellorder.add_sell_order') <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sellorder.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h1>
@@ -16,6 +22,7 @@
 	<input type="hidden" id="p_symbol" value="{{$currency_details->symbol}}">
 	<input type="hidden" id="p_thousand" value="{{$currency_details->thousand_separator}}">
 	<input type="hidden" id="p_decimal" value="{{$currency_details->decimal_separator}}">
+	<input type="hidden" id="show_price" value="{{$show_price}}" name="show_price" />
 
 	@include('layouts.partials.error')
 
@@ -181,11 +188,11 @@
 								<th>#</th>
 								<th>@lang( 'product.product_name' )</th>
 								<th>@lang( 'sale.qty' )</th>
-								<th>@lang( 'sellorder.unit_cost_before_tax' )</th>
+								<th class="{{$show_price}}">@lang( 'sellorder.unit_cost_before_tax' )</th>
 								<th class="{{$hide_tax}}">@lang( 'sellorder.subtotal_before_tax' )</th>
 								<th class="{{$hide_tax}}">@lang( 'sellorder.product_tax' )</th>
 								<th class="{{$hide_tax}}">@lang( 'sellorder.net_cost' )</th>
-								<th>@lang( 'sellorder.line_total' )</th>
+								<th class="{{$show_price}}">@lang( 'sellorder.line_total' )</th>
 								<th>@lang( 'sale.sale_order_date' )</th>
 								
 								<th><i class="fa fa-trash" aria-hidden="true"></i></th>
@@ -204,7 +211,7 @@
 								<input type="hidden" id="st_before_tax_input" value=0>
 							</td>
 						</tr>
-						<tr>
+						<tr class="{{$show_price}}">
 							<th class="col-md-7 text-right">@lang( 'sellorder.net_total_amount' ):</th>
 							<td class="col-md-5 text-left">
 								<span id="total_subtotal" class="display_currency"></span>
@@ -224,7 +231,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<table class="table">
-					<tr>
+					<tr class="{{$show_price}}">
 						<th class="col-md-10 text-right"><b>@lang('sellorder.sellorder_total'): </b></th>
 						<td class="col-md-2 text-left">
 							{!! Form::hidden('final_total', 0 , ['id' => 'grand_total_hidden']); !!}

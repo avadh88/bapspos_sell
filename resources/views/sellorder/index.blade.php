@@ -2,7 +2,13 @@
 @section('title', __('sellorder.sellorder'))
 
 @section('content')
-
+@php
+    $show_price=1;
+    if(!auth()->user()->show_price)
+    {
+        $show_price=0;
+    }
+@endphp
 <!-- Content Header (Page header) -->
 <section class="content-header no-print">
     <h1>@lang('sellorder.sellorder')
@@ -48,6 +54,8 @@
         @endcan
         @can('sellorder.view')
             <div class="table-responsive">
+                <input type="hidden" id="show_price" value="{{$show_price}}" name="show_price" />
+                @if($show_price==1)
                 <table class="table table-bordered table-striped ajax_view" id="sellorder_table">
                     <thead>
                         <tr>
@@ -77,6 +85,31 @@
                         </tr>
                     </tfoot>
                 </table>
+                @else
+                <table class="table table-bordered table-striped ajax_view" id="sellorder_table_without_price">
+                    <thead>
+                        <tr>
+                            <th>@lang('messages.date')</th>
+                            <th>@lang('sellorder.ref_no')</th>
+                            <th>@lang('sellorder.location')</th>
+                            <th>@lang('sellorder.customer')</th>
+                            <th>@lang('sellorder.sellorder_status')</th>
+                            <th>@lang('sellorder.payment_status')</th>
+                            <th>Notes</th>
+                            <th>@lang('messages.action')</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr class="bg-gray font-17 text-center footer-total">
+                            <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                            <td id="footer_status_count"></td>
+                            <td id="footer_payment_status_count"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                @endif
             </div>
         @endcan
     @endcomponent

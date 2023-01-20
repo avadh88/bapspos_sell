@@ -331,10 +331,12 @@ $(document).ready(function() {
         columns: [
             { data: 'product_name', name: 'products.name' },
             { data: 'sku', name: 'sku' },
+            { data: 'purchase_qty', name: 'purchase_qty',searchable:false },
             { data: 'quantity', name: 'quantity',searchable:false },
             { data: 'delivered', name: 'delivered',searchable:false },
-            { data: 'pending', name: 'pending',searchable:false },
-            { data: 'outstanding', name: 'outstanding',searchable:false }
+            // { data: 'pending', name: 'pending',searchable:false },
+            { data: 'outstanding', name: 'outstanding',searchable:false },
+            { data: 'current_stock', name: 'current_stock',searchable:false },
             
         ],
         fnDrawCallback: function(oSettings) {
