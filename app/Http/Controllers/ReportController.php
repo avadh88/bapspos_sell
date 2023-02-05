@@ -1365,6 +1365,11 @@ class ReportController extends Controller
                 $query->where('t.contact_id', $supplier_id);
             }
 
+            $purchase_status = $request->get('purchase_status', null);
+            if (!empty($purchase_status)) {
+                $query->where('t.status', $purchase_status);
+            }
+
             return Datatables::of($query)
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
@@ -1397,9 +1402,9 @@ class ReportController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id);
         $suppliers = Contact::suppliersDropdown($business_id);
-
+        $orderStatuses = $this->productUtil->orderStatuses();
         return view('report.product_purchase_report')
-            ->with(compact('business_locations', 'suppliers'));
+            ->with(compact('business_locations', 'suppliers','orderStatuses'));
     }
 
     /**

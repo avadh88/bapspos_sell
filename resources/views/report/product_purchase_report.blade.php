@@ -50,6 +50,12 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
+                    {!! Forpurchasem::label('purchase_list_filter_status',  __('purchase.purchase_status') . ':') !!}
+                    {!! Form::select('purchase_list_filter_status', $orderStatuses, null, ['class' => 'form-control select2','id'=>'purchase_status', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
 
                     {!! Form::label('product_pr_date_filter', __('report.date_range') . ':') !!}
                     {!! Form::text('date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'id' => 'product_pr_date_filter', 'readonly']); !!}

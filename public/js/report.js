@@ -546,6 +546,7 @@ $(document).ready(function() {
                 d.variation_id = $('#variation_id').val();
                 d.supplier_id = $('select#supplier_id').val();
                 d.location_id = $('select#location_id').val();
+                d.purchase_status = $('select#purchase_status').val();
             },
         },
         columns: [
