@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    {!! Forpurchasem::label('purchase_list_filter_status',  __('purchase.purchase_status') . ':') !!}
+                    {!! Form::label('purchase_list_filter_status',  __('purchase.purchase_status') . ':') !!}
                     {!! Form::select('purchase_list_filter_status', $orderStatuses, null, ['class' => 'form-control select2','id'=>'purchase_status', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
                 </div>
             </div>
