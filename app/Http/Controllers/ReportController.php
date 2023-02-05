@@ -1326,6 +1326,7 @@ class ReportController extends Controller
                     ->where('t.type', 'purchase')
                     ->select(
                         'p.name as product_name',
+                        'p.sku as product_sku',
                         'p.type as product_type',
                         'pv.name as product_variation',
                         'v.name as variation_name',

@@ -68,6 +68,7 @@
                         <thead>
                             <tr>
                                 <th>@lang('sale.product')</th>
+                                <th>@lang('sku')</th>
                                 <th>@lang('purchase.supplier')</th>
                                 <th>@lang('purchase.ref_no')</th>
                                 <th>@lang('messages.date')</th>
@@ -79,7 +80,7 @@
                         </thead>
                         <tfoot>
                             <tr class="bg-gray font-17 footer-total text-center">
-                                <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                                <td colspan="5"><strong>@lang('sale.total'):</strong></td>
                                 <td id="footer_total_purchase"></td>
                                 <td id="footer_total_adjusted"></td>
                                 <td></td>

@@ -550,6 +550,7 @@ $(document).ready(function() {
         },
         columns: [
             { data: 'product_name', name: 'p.name' },
+            { data: 'product_sku', name: 'p.sku' },
             { data: 'supplier', name: 'c.name' },
             { data: 'ref_no', name: 't.ref_no' },
             { data: 'transaction_date', name: 't.transaction_date' },
