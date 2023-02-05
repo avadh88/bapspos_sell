@@ -520,7 +520,7 @@ $(document).ready(function() {
             .setEndDate(moment());
     }
     $(
-        '#product_purchase_report_form #variation_id, #product_purchase_report_form #location_id, #product_purchase_report_form #supplier_id, #product_purchase_report_form #product_pr_date_filter'
+        '#product_purchase_report_form #variation_id, #product_purchase_report_form #location_id, #product_purchase_report_form #supplier_id,#product_purchase_report_form #purchase_status,#product_purchase_report_form #product_pr_date_filter'
     ).change(function() {
         product_purchase_report.ajax.reload();
     });
