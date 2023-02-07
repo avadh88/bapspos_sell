@@ -833,7 +833,7 @@ class GenralstoreReportController extends Controller
             WHERE transactions.type='sellorder' $location_filter $customer_filter $date_filter
             AND sol.product_id=products.id) as quantity"),
 
-            'products.sku as sku','products.name as product_name','products.id as product_id','sol.purchase_price','units.actual_name as units'
+            'products.sku as sku','products.name as product_name','products.id as product_id','variations.default_sell_price as purchase_price','units.actual_name as units'
             );
 
             //$products->where('trans.type','sellorder');
