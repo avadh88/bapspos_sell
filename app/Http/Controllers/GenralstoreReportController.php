@@ -805,8 +805,8 @@ class GenralstoreReportController extends Controller
                 $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
                 $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
 
-                $products->whereDate('sol.sell_order_date', '>=', $start)
-                        ->whereDate('sol.sell_order_date', '<=', $end);
+                // $products->whereDate('sol.sell_order_date', '>=', $start)
+                //         ->whereDate('sol.sell_order_date', '<=', $end);
             }
             if (!empty($request->input('category_id'))) 
             {
