@@ -762,7 +762,7 @@ class GenralstoreReportController extends Controller
 
 
             $products = DB::table('products')
-            ->join('contacts','contacts.id','=','trans.contact_id')
+            //->join('contacts','contacts.id','=','trans.contact_id')
             ->join('variations','products.id','=','variations.product_id')
             ->join('units','products.unit_id','=','units.id');
             
