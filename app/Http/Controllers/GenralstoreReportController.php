@@ -859,33 +859,33 @@ class GenralstoreReportController extends Controller
                 ->addColumn('purchase_qty', function ($row) use ($permitted_locations,$location_id,$request,$remainProduct,$purchasable) { 
 
                     
-                    $products = DB::table('sell_order_lines as sol')
-                    ->join('transactions as trans', 'trans.id', '=', 'sol.transaction_id')
-                    ->select('trans.contact_id')->distinct();
-                    if (!empty($business_id)) 
-                    {
-                        $products->where('trans.business_id', $business_id);
-                    }
-                    if (!empty($request->input('location_id'))) 
-                    {
-                        $products->where('trans.location_id', $request->input('location_id'));
-                    }
-                    if (!empty($request->input('ir_customer_id'))) 
-                    {
-                        $products->where('trans.contact_id', $request->input('ir_customer_id'));
-                    }
-                    $products->where('sol.product_id',$row->product_id);
-                    if (!empty($date_range)) {
-                        $date_range = $date_range;
-                        $date_range_array = explode('~', $date_range);
-                        $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
-                        $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
+                    // $products = DB::table('sell_order_lines as sol')
+                    // ->join('transactions as trans', 'trans.id', '=', 'sol.transaction_id')
+                    // ->select('trans.contact_id')->distinct();
+                    // if (!empty($business_id)) 
+                    // {
+                    //     $products->where('trans.business_id', $business_id);
+                    // }
+                    // if (!empty($request->input('location_id'))) 
+                    // {
+                    //     $products->where('trans.location_id', $request->input('location_id'));
+                    // }
+                    // if (!empty($request->input('ir_customer_id'))) 
+                    // {
+                    //     $products->where('trans.contact_id', $request->input('ir_customer_id'));
+                    // }
+                    // $products->where('sol.product_id',$row->product_id);
+                    // if (!empty($date_range)) {
+                    //     $date_range = $date_range;
+                    //     $date_range_array = explode('~', $date_range);
+                    //     $start = $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
+                    //     $end   = $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
 
-                        $products->whereDate('sol.sell_order_date', '>=', $start)
-                                ->whereDate('sol.sell_order_date', '<=', $end);
-                    }
-                    //$productsData = $products->groupBy('trans.contact_id')->get();
-                    $contactIds = $products->groupBy('trans.contact_id')->pluck('contact_id')->toArray();
+                    //     $products->whereDate('sol.sell_order_date', '>=', $start)
+                    //             ->whereDate('sol.sell_order_date', '<=', $end);
+                    // }
+                    // //$productsData = $products->groupBy('trans.contact_id')->get();
+                    // $contactIds = $products->groupBy('trans.contact_id')->pluck('contact_id')->toArray();
                     
 
 
@@ -1030,7 +1030,7 @@ class GenralstoreReportController extends Controller
                     $products = DB::table('transaction_sell_lines as tsl')
                     ->join('transactions as trans', 'trans.id', '=', 'tsl.transaction_id');
 
-                    $products->select(DB::raw('(COALESCE(sum(tsl.quantity),0)) as quantity'));
+                    $products->select(DB::raw('(COALESCE(sum(tsl.quantity -tsl.quantity_returned),0)) as quantity'));
                     if (!empty($business_id)) 
                     {
                         $products->where('trans.business_id', $business_id);
@@ -1110,7 +1110,7 @@ class GenralstoreReportController extends Controller
                 })
                 ->addColumn('outstanding', function ($row) use ($remainProduct,$outstanding) { 
                     
-                    return '<span class="pending" data-orig-value="'.$_SESSION['outstanding'].'" >'.$_SESSION['outstanding'].'</span>';
+                    return '<span class="outstanding" data-orig-value="'.$_SESSION['outstanding'].'" >'.$_SESSION['outstanding'].'</span>';
                 })
                 ->addColumn('purchasable', function ($row) use ($permitted_locations,$location_id) { 
                     $pending = $row->total_sold - $row->total_returned;

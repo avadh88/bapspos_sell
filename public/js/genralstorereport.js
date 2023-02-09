@@ -335,6 +335,7 @@ $(document).ready(function() {
             { data: 'quantity', name: 'quantity',searchable:false },
             { data: 'delivered', name: 'delivered',searchable:false },
             // { data: 'pending', name: 'pending',searchable:false },
+            { data: 'total_sold', name: 'total_sold',searchable:false },
             { data: 'outstanding', name: 'outstanding',searchable:false },
             { data: 'current_stock', name: 'current_stock',searchable:false },
             
@@ -347,6 +348,11 @@ $(document).ready(function() {
             $('#footer_total_quantity_pending').html(
                 __sum_data($('#total_demand_report_table'), 'pending')
             );
+
+            $('#footer_total_quantity_outstanding').html(
+                __sum_data($('#total_demand_report_table'), 'outstanding')
+            );
+
             $('#footer_total_quantity_outstanding').html(
                 __sum_data($('#total_demand_report_table'), 'outstanding')
             );
