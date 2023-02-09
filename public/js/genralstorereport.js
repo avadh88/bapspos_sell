@@ -339,6 +339,7 @@ $(document).ready(function() {
             { data: 'quantity', name: 'quantity',searchable:false },
             { data: 'delivered', name: 'delivered',searchable:false },
             // { data: 'pending', name: 'pending',searchable:false },
+            
             { data: 'outstanding', name: 'outstanding',searchable:false },
             { data: 'current_stock', name: 'current_stock',searchable:false },
             
