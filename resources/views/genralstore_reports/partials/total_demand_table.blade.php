@@ -27,7 +27,7 @@
                 <td id="footer_total_quantity" ></td>
                 <td></td>
                 <!-- <td id="footer_total_quantity_pending" ></td> -->
-                <td id="footer_total_sell" ></td>
+                <td id="footer_total_quantity_sell" ></td>
                 <td id="footer_total_quantity_outstanding" ></td>
                 <td id="footer_total_quantity_current_stock"></td>
                 @if(!$departmentUser && $show_price==1)
